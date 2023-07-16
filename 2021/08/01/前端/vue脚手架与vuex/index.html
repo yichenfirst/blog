@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>vue脚手架与vuex | 逸辰</title>
+  <meta name="description" content="Vue CLI 脚手架1、什么是CLI命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI） 2 、什么是Vue CLI  &lt;&#x3D;&#x3D;&#x3D;&#x3D;&gt;  (maven 项目构建工具)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue脚手架与vuex">
+<meta property="og:url" content="https://yichenfirst.github.io/2021/08/01/%E5%89%8D%E7%AB%AF/vue%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8Evuex/index.html">
+<meta property="og:site_name" content="逸辰">
+<meta property="og:description" content="Vue CLI 脚手架1、什么是CLI命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI） 2 、什么是Vue CLI  &lt;&#x3D;&#x3D;&#x3D;&#x3D;&gt;  (maven 项目构建工具)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135601.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135656.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135813.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135902.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135904.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135934.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135907.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135909.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135915.png">
+<meta property="article:published_time" content="2021-07-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-16T06:02:00.202Z">
+<meta property="article:author" content="逸辰">
+<meta property="article:tag" content="vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135601.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://yichenfirst.github.io/2021/08/01/%E5%89%8D%E7%AB%AF/vue%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8Evuex/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="逸辰" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">逸辰</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">后端开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 长春，中国</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aop/" rel="tag">aop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsecurity/" rel="tag">springsecurity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/token/" rel="tag">token</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/aop/" style="font-size: 13px;">aop</a> <a href="/tags/docker/" style="font-size: 13px;">docker</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/mybatis/" style="font-size: 13px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/redis/" style="font-size: 13px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/springcloud/" style="font-size: 13px;">springcloud</a> <a href="/tags/springsecurity/" style="font-size: 13px;">springsecurity</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/token/" style="font-size: 13px;">token</a> <a href="/tags/vue/" style="font-size: 13.5px;">vue</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/07/15/%E9%9D%A2%E8%AF%95/Java%E7%9B%B8%E5%85%B3/" class="title">面试总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-07-15T12:46:54.418Z" itemprop="datePublished">2023-07-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/" class="title">TCP协议</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-09T16:00:00.000Z" itemprop="datePublished">2023-03-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/01/03/spring/Spring%20AOP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring AOP源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-01-02T16:00:00.000Z" itemprop="datePublished">2023-01-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/26/spring/Spring%20IOC%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring IOC源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-25T16:00:00.000Z" itemprop="datePublished">2022-12-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/03/spring/spring%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/" class="title">spring源码编译</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-02T16:00:00.000Z" itemprop="datePublished">2022-12-03</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-前端/vue脚手架与vuex" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue脚手架与vuex
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/08/01/%E5%89%8D%E7%AB%AF/vue%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8Evuex/" class="article-date">
+	  <time datetime="2021-07-31T16:00:00.000Z" itemprop="datePublished">2021-08-01</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/vue/" rel="tag">vue</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/01/%E5%89%8D%E7%AB%AF/vue%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8Evuex/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 4.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 22(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Vue-CLI-脚手架"><a href="#Vue-CLI-脚手架" class="headerlink" title="Vue CLI 脚手架"></a>Vue CLI 脚手架</h2><h3 id="1、什么是CLI"><a href="#1、什么是CLI" class="headerlink" title="1、什么是CLI"></a>1、什么是CLI</h3><p>命令行界面（英语：command-line interface，缩写：<em>CLI</em>）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI）</p>
+<h3 id="2-、什么是Vue-CLI-lt-x3D-x3D-x3D-x3D-gt-maven-项目构建工具"><a href="#2-、什么是Vue-CLI-lt-x3D-x3D-x3D-x3D-gt-maven-项目构建工具" class="headerlink" title="2 、什么是Vue CLI  &lt;&#x3D;&#x3D;&#x3D;&#x3D;&gt;  (maven 项目构建工具)"></a>2 、什么是Vue CLI  &lt;&#x3D;&#x3D;&#x3D;&#x3D;&gt;  (maven 项目构建工具)</h3><p>Vue CLI 是一个基于 Vue.js 进行快速开发的完整系统。 使用Vue 脚手架之后我们开发的页面将是一个完整系统(项目)。 前端系统</p>
+<h3 id="3-、Vue-CLI优势"><a href="#3-、Vue-CLI优势" class="headerlink" title="3 、Vue CLI优势"></a>3 、Vue CLI优势</h3><ul>
+<li>通过 <code>vue-cli</code> 搭建交互式的项目脚手架。       </li>
+<li>通过 <code>@vue/cli</code> + <code>@vue/cli-service-global</code> 快速开始零配置原型开发   </li>
+<li>一个运行时依赖 (<code>@vue/cli-service</code>)，该依赖：<ul>
+<li>可升级;</li>
+<li>基于 webpack 构建，并带有合理的默认配置；   webpack 前端打包工具  index.html   vue组件  用户组件   学生组件  ….. 路由   dist目录</li>
+<li>可以通过项目内的配置文件进行配置；      cli 项目配置文件  添加</li>
+<li>可以通过插件进行扩展。                            cli 项目里</li>
+</ul>
+</li>
+<li>一个丰富的官方插件集合，集成了前端生态中最好的工具。 webpack打包工具&#x3D;&#x3D;&#x3D;&gt;dist目录  nodejs 服务器(tomcat java)  热部署插件  npm包</li>
+<li>一套完全图形化的创建和管理 Vue.js 项目的用户界面</li>
+</ul>
+<h3 id="4、-Vue-CLI安装"><a href="#4、-Vue-CLI安装" class="headerlink" title="4、 Vue CLI安装"></a>4、 Vue CLI安装</h3><h4 id="1、环境准备"><a href="#1、环境准备" class="headerlink" title="1、环境准备"></a>1、环境准备</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.下载nodejs</span></span><br><span class="line"><span class="code">	http://nodejs.cn/download/</span></span><br><span class="line"><span class="code">		windows系统:   .msi  安装包(exe)指定安装位置   .zip(压缩包)直接解压缩指定目录</span></span><br><span class="line"><span class="code">		mac os 系统:   .pkg  安装包格式自动配置环境变量  .tar.gz(压缩包)解压缩安装到指定名</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 2.配置nodejs环境变量</span></span><br><span class="line"><span class="code">	1.windows系统:</span></span><br><span class="line"><span class="code">	 	计算上右键属性----&gt;  高级属性 ----&gt;环境变量 添加如下配置:</span></span><br><span class="line"><span class="code">		NODE_HOME=  nodejs安装目录</span></span><br><span class="line"><span class="code">        PATH    = xxxx;%NODE_HOME%</span></span><br><span class="line"><span class="code">    2.macos 系统</span></span><br><span class="line"><span class="code">    	推荐使用.pkg安装直接配置node环境</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.验证nodejs环境是否成功</span></span><br><span class="line"><span class="code">	node -v </span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 4.npm介绍</span></span><br><span class="line"><span class="code">	node package mangager   nodejs包管理工具       前端主流技术  npm 进行统一管理</span></span><br><span class="line"><span class="code">	maven 管理java后端依赖    远程仓库(中心仓库)      阿里云镜像</span></span><br><span class="line"><span class="code">	npm   管理前端系统依赖     远程仓库(中心仓库)      配置淘宝镜像</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 5.配置淘宝镜像</span></span><br><span class="line"><span class="code">	  npm config set registry https://registry.npm.taobao.org</span></span><br><span class="line"><span class="code">	  npm config get registry</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 6.配置npm下载依赖位置</span></span><br><span class="line"><span class="code">	 windows:</span></span><br><span class="line"><span class="code">		npm config set cache &quot;D:\nodereps\npm-cache&quot;</span></span><br><span class="line"><span class="code">		npm config set prefix &quot;D:\nodereps\npm_global&quot;</span></span><br><span class="line"><span class="code">	 mac os:</span></span><br><span class="line"><span class="code">	 	npm config set cache &quot;/Users/chenyannan/dev/nodereps&quot;</span></span><br><span class="line"><span class="code">		npm config set prefix &quot;/Users/chenyannan/dev/nodereps&quot;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 7.验证nodejs环境配置</span></span><br><span class="line"><span class="code">	npm config ls</span></span><br><span class="line"><span class="code">    ; userconfig /Users/chenyannan/.npmrc</span></span><br><span class="line"><span class="code">    cache = &quot;/Users/chenyannan/dev/nodereps&quot;</span></span><br><span class="line"><span class="code">    prefix = &quot;/Users/chenyannan/dev/nodereps&quot;</span></span><br><span class="line"><span class="code">    registry = &quot;https://registry.npm.taobao.org/&quot;</span></span><br><span class="line"><span class="code"></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2、安装脚手架"><a href="#2、安装脚手架" class="headerlink" title="2、安装脚手架"></a>2、安装脚手架</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 0.卸载脚手架</span></span><br><span class="line"><span class="code">	npm uninstall -g @vue/cli  //卸载3.x版本脚手架</span></span><br><span class="line"><span class="code">	npm uninstall -g vue-cli  //卸载2.x版本脚手架</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 1.Vue Cli官方网站</span></span><br><span class="line"><span class="code">	https://cli.vuejs.org/zh/guide/</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 2.安装vue Cli</span></span><br><span class="line"><span class="code">	npm install -g vue-cli</span></span><br><span class="line"><span class="code"></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3、第一个vue脚手架项目"><a href="#3、第一个vue脚手架项目" class="headerlink" title="3、第一个vue脚手架项目"></a>3、第一个vue脚手架项目</h4><blockquote>
+<p>Vue-cli目录结构</p>
+</blockquote>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135601.png" alt="image-20210721155403325"></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.创建vue脚手架第一个项目</span></span><br><span class="line"><span class="code">	vue init webpack 项目名</span></span><br><span class="line"><span class="code"># 2.创建第一个项目</span></span><br><span class="line"><span class="code">	hello     -------------&gt;项目名</span></span><br><span class="line"><span class="code">    -build  -------------&gt;用来使用webpack打包使用build依赖  构建一些依赖文件</span></span><br><span class="line"><span class="code">    -config -------------&gt;用来做整个项目配置目录   主要用来对 开发 测试 环境进行配置</span></span><br><span class="line"><span class="code">    -node_modules  ------&gt;用来管理项目中使用依赖</span></span><br><span class="line"><span class="code">    -src					 ------&gt;用来书写vue的源代码[重点]</span></span><br><span class="line"><span class="code">    	+assets      ------&gt;用来存放静态资源 [重点]</span></span><br><span class="line"><span class="code">      	components   ------&gt;用来书写Vue组件 [重点]</span></span><br><span class="line"><span class="code">      	router			 ------&gt;用来配置项目中路由[重点]</span></span><br><span class="line"><span class="code">      	App.vue      ------&gt;项目中根组件[重点]</span></span><br><span class="line"><span class="code">      	main.js      ------&gt;项目中主入口[重点]</span></span><br><span class="line"><span class="code">    -static        ------&gt;其它静态</span></span><br><span class="line"><span class="code">    -.babelrc      ------&gt; 将es6语法转为es5运行</span></span><br><span class="line"><span class="code">    -.editorconfig ------&gt; 项目编辑配置</span></span><br><span class="line"><span class="code">    -.gitignore    ------&gt; git版本控制忽略文件</span></span><br><span class="line"><span class="code">    -.postcssrc.js ------&gt; 源码相关js</span></span><br><span class="line"><span class="code">    -index.html    ------&gt; 项目主页</span></span><br><span class="line"><span class="code">    -package.json  ------&gt; 类似与pom.xml 依赖管理  jquery 不建议手动修改</span></span><br><span class="line"><span class="code">    -package-lock.json ----&gt; 对package.json加锁</span></span><br><span class="line"><span class="code">    -README.md         ----&gt; 项目说明文件</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.如何运行在项目的根目录中执行</span></span><br><span class="line"><span class="code">	npm run dev 运行前端系统</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 4.如何访问项目</span></span><br><span class="line"><span class="code">	http://localhost:8080    </span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 5.Vue Cli中项目开发方式</span></span><br><span class="line"><span class="code">	 注意: 一切皆组件   一个组件中   js代码  html代码  css样式</span></span><br><span class="line"><span class="code">	 	1. VueCli开发方式是在项目中开发一个一个组件对应一个业务功能模块,日后可以将多个组件组合到一起形成一个前端系统</span></span><br><span class="line"><span class="code">	 	2. 日后在使用vue Cli进行开发时不再书写html,编写的是一个个组件(组件后缀.vue结尾的文件),日后打包时vue cli会将组件编译成运行的html文件	  </span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>src 目录</p>
+</blockquote>
+<p><code>src</code>目录是项目的源码目录，所有代码都会写在这里！</p>
+<blockquote>
+<p>main.js</p>
+</blockquote>
+<p>项目的入口文件，我们知道所有的程序都会有一个入口</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The Vue build version to load with the `import` command</span></span><br><span class="line"><span class="comment">// (runtime-only or standalone) has been set in webpack.base.conf with an alias.</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>   <span class="comment">// 引入VUE核心库</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span> <span class="comment">// 引入一个当前目录下的名字为App.vue的组件</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="property">config</span>.<span class="property">productionTip</span> = <span class="literal">false</span>  <span class="comment">// 是否要在生产环境当中给予提示功能。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">  router,</span><br><span class="line">  <span class="attr">components</span>: &#123; <span class="title class_">App</span> &#125;,</span><br><span class="line">  <span class="attr">template</span>: <span class="string">&#x27;&lt;App/&gt;&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>import Vue from &#39;vue&#39;</code>：ES6 写法，会被转换成 require(“vue”); （require 是 NodeJS 提供的模块加载器）其实就相当于</p>
+<p><code>&lt;script src = &quot;vue&quot;&gt;&lt;/script&gt;</code> </p>
+</li>
+<li><p><code>import App from &#39;./App&#39;</code> ：意思同上，但是指定了查找路径，.&#x2F; 为当前目录</p>
+</li>
+<li><p><code>Vue.config.productionTip = false</code>：关闭浏览器控制台关于环境的相关提示</p>
+</li>
+<li><p><code>new Vue(&#123;&#125;)</code>：实例化 Vue</p>
+<ul>
+<li><code>el: &#39;#app&#39;</code>：查找 index.html 中 id 为 app 的元素</li>
+<li><code>template: &#39;&lt;App/&gt;&#39;</code>：模板，会将 index.html 中替换为</li>
+<li><code>components: &#123; App &#125;</code> ：引入组件，使用的是 import App from ‘.&#x2F;App’ 定义的 App 组件;</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>App.vue</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./assets/logo.png&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>自定义脚手架<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="comment">&lt;!--展示路由--&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">router-view</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&#x27;App&#x27;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"><span class="selector-id">#app</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">font-family</span>: <span class="string">&#x27;Avenir&#x27;</span>, Helvetica, Arial, sans-serif;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  -webkit-<span class="attribute">font-smoothing</span>: antialiased;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  -moz-osx-<span class="attribute">font-smoothing</span>: grayscale;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">text-align</span>: center;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">color</span>: <span class="number">#2c3e50</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">margin-top</span>: <span class="number">60px</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>template：HTML 代码模板，会替换 &lt; App &#x2F;&gt; 中的内容</p>
+</li>
+<li><p>export default{…}：导出 NodeJS 对象，作用是可以通过 import 关键字导入</p>
+<ul>
+<li>name: ‘App’：定义组件的名称</li>
+<li>components: { HelloWorld }：定义子组件</li>
+</ul>
+</li>
+<li><p>在hello,Vue中,关于 &lt; style scoped&gt; 的说明：CSS 样式仅在当前组件有效，声明了样式的作用域,是当前的界面私有的! 不加代表全局有效。</p>
+</li>
+</ul>
+<blockquote>
+<p>index.js  配置路由</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Router</span> <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">HelloWorld</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/HelloWorld&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Router</span>) <span class="comment">//注册路由 new Vue(&#123;router,&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Router</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">HelloWorld</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>HelloWorld.vue</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 一个组件代表一个业务功能：html标签 js代码 css代码 --&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hello&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    </span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&#x27;HelloWorld&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  data () &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">msg</span>: <span class="string">&#x27;欢迎Vue&#x27;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line">&lt;!-- <span class="title class_">Add</span> <span class="string">&quot;scoped&quot;</span> attribute to limit <span class="variable constant_">CSS</span> to <span class="variable language_">this</span> component only --&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="language-css"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"><span class="selector-tag">h1</span>, <span class="selector-tag">h2</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">font-weight</span>: normal;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"><span class="selector-tag">ul</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">list-style-type</span>: none;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">padding</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"><span class="selector-tag">li</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">display</span>: inline-block;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"><span class="selector-tag">a</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">  <span class="attribute">color</span>: <span class="number">#42b983</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4、如何开发Vue脚手架"><a href="#4、如何开发Vue脚手架" class="headerlink" title="4、如何开发Vue脚手架"></a>4、如何开发Vue脚手架</h4><p><code>注意:在Vue cli 中一切皆组件</code></p>
+<p>1、我们在HelloWorld.vue的同级目录下新建两个Student和User组件。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135656.png" alt="image-20210721204921996"></p>
+<p>2、<code>Student.vue</code>和<code>User.vue</code>组件 </p>
+<p><code>Student.vue</code>组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hello&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">     <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello world &#123;&#123;msg&#125;&#125; <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	 <span class="tag">&lt;<span class="name">h3</span>&gt;</span>我是学生管理的主页<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&#x27;Student&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  data () &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">msg</span>: <span class="string">&#x27;学生管理&#x27;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>User.vue</code>组件 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hello&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">     <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello world &#123;&#123;msg&#125;&#125; <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	 <span class="tag">&lt;<span class="name">h3</span>&gt;</span>我是用户管理的主页<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&#x27;HelloWorld&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  data () &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">msg</span>: <span class="string">&#x27;用户管理&#x27;</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>3、在<code>App.vue</code>组件中引入这两个组件的链接，进行路由切换</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./assets/logo.png&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>自定义脚手架<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	</span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/&quot;</span>&gt;</span>主页<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/user&quot;</span>&gt;</span>用户管理<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/student&quot;</span>&gt;</span>学生管理<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	</span></span><br><span class="line"><span class="language-xml">	<span class="comment">&lt;!--展示路由--&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">router-view</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>4、启动项目，测试一下</p>
+<img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135813.png" alt="image-20210721210519964" style="zoom: 50%;" />
+
+<h2 id="在脚手架中使用axios"><a href="#在脚手架中使用axios" class="headerlink" title="在脚手架中使用axios"></a>在脚手架中使用axios</h2><h3 id="1、安装axios"><a href="#1、安装axios" class="headerlink" title="1、安装axios"></a>1、安装axios</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.安装axios</span></span><br><span class="line"><span class="code">	npm install axios --save</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 2.配置main.js中引入axios</span></span><br><span class="line"><span class="code">	import axios from &#x27;axios&#x27;;</span></span><br><span class="line"><span class="code">	Vue.prototype.$http=axios;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.使用axios</span></span><br><span class="line"><span class="code">	在需要发送异步请求的位置:this.$http.get(&quot;url&quot;).then((res)=&gt;&#123;&#125;) this.$http.post(&quot;url&quot;).then((res)=&gt;&#123;&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Vue-Cli脚手架项目部署"><a href="#Vue-Cli脚手架项目部署" class="headerlink" title="Vue Cli脚手架项目部署"></a>Vue Cli脚手架项目部署</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.在项目根目录中执行如下命令:</span></span><br><span class="line"><span class="code">	npm run build</span></span><br><span class="line"><span class="code">	注意:vue脚手架打包的项目必须在服务器上运行不能直接双击运行</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 2.打包之后当前项目中变化</span></span><br><span class="line"><span class="code">	在打包之后项目中出现dist目录,dist目录就是vue脚手架项目生产目录或者说是直接部署目录</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="webstorm开发vue-cli项目"><a href="#webstorm开发vue-cli项目" class="headerlink" title="webstorm开发vue cli项目"></a>webstorm开发vue cli项目</h2><h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>WebStorm 是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JetBrains/7502758">JetBrains</a>公司旗下一款[JavaScript ](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JavaScript">https://baike.baidu.com/item/JavaScript</a> &#x2F;321142)开发工具。已经被广大<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD/1122445">中国</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JS/10687961">JS</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BC%80%E5%8F%91%E8%80%85/239674">开发者</a>誉为“<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Web/150564">Web</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/10009024">前端开发</a>神器”、“最强大的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/HTML/97049">HTML</a>5编辑器”、“最智能的JavaScript[ IDE](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/">https://baike.baidu.com/item/</a> IDE&#x2F;8232086)”等。与[IntelliJ IDEA](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/IntelliJ">https://baike.baidu.com/item/IntelliJ</a> IDEA&#x2F;9548353)同源，继承了[IntelliJ IDEA](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/IntelliJ">https://baike.baidu.com/item/IntelliJ</a> IDEA&#x2F;9548353)强大的JS部分的功能。</p>
+<img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135902.png" alt="img" style="zoom:67%;" />
+
+<h3 id="2、安装"><a href="#2、安装" class="headerlink" title="2、安装"></a>2、安装</h3><p>官网地址：<a target="_blank" rel="noopener" href="http://www.jetbrains.com/webstorm/">http://www.jetbrains.com/webstorm/</a></p>
+<p>选择好安装路径</p>
+<img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135904.png" alt="image-20210722210408765" style="zoom:67%;" /> 
+
+<h3 id="3、使用webstorm"><a href="#3、使用webstorm" class="headerlink" title="3、使用webstorm"></a>3、使用webstorm</h3><p>webstorm和idea同属于一家开发公司，因此使用方式基本一样。</p>
+<blockquote>
+<p>使用webstorm初始化项目</p>
+</blockquote>
+<p>1、我们新建一个webstromcodes项目。</p>
+<p>2、打开Terminal终端，输入<code>vue init webpack vue_day5</code> ，进行<code>vue-day5</code>项目的创建。</p>
+<p>3、接下来的步骤和使用Vue Cli脚手架开发一样。</p>
+<p>4、显示如下页面，项目初始化成功。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135934.png" alt="image-20210722212053257"></p>
+<p>可以看下目录结构，和使用Vue CLI脚手架开发目录结构一致。</p>
+<img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135907.png" alt="image-20210722212203601" style="zoom:67%;" /> 
+
+<p>5、在Terminal终端输入<code>cd vue_day5</code>，进入当前项目根目录，项目目录中包含<code>package.json</code>才是根目录，可以输入<code>dir</code>查看当前目录结构。</p>
+<p>6、最后我们输入<code>npm run dev</code>启动项目，出现如下界面：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135909.png" alt="image-20210722212849013"></p>
+<p>说明项目成功运行！！！输入<a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080</a> ，打开浏览器查看一下，出现默认界面。</p>
+<blockquote>
+<p>main.js  项目中主入口</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//引入vue.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="comment">//引入app.vue 组件</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span></span><br><span class="line"><span class="comment">//引入router目录中 /index.js</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="property">config</span>.<span class="property">productionTip</span> = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>, <span class="comment">//指定vue实例作用范围</span></span><br><span class="line">  router,</span><br><span class="line">  <span class="attr">components</span>: &#123; <span class="title class_">App</span> &#125;,</span><br><span class="line">  <span class="attr">template</span>: <span class="string">&#x27;&lt;App/&gt;&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、开发vue-cli项目-一"><a href="#4、开发vue-cli项目-一" class="headerlink" title="4、开发vue cli项目(一)"></a>4、开发vue cli项目(一)</h3><p><strong>1、Student组件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hello&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; msg &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">  data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">msg</span>: <span class="string">&#x27;欢迎进入我的系统！！！&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2、User组件</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>用户管理<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">&quot;1&quot;</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>编号<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>年龄<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>工资<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">th</span>&gt;</span>操作<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">tr</span> <span class="attr">v-for</span>=<span class="string">&quot;(user,index) in users&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;user.id&quot;</span> &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.id&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.name&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.age &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.des&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&quot;</span>&gt;</span>删除<span class="tag">&lt;/<span class="name">a</span>&gt;</span> <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&quot;</span>&gt;</span>修改<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;User&quot;</span>,</span><br><span class="line">  <span class="title function_">data</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">users</span>:[],<span class="comment">//定义数组</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">methods</span>:&#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">computed</span>:&#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">created</span>(<span class="params"></span>) &#123; <span class="comment">//初始化阶段发送请求查询所有用户信息</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$http</span>.<span class="title function_">get</span>(<span class="string">&quot;http://localhost:8990/users&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">       <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">data</span>);</span><br><span class="line">       <span class="variable language_">this</span>.<span class="property">users</span> = res.<span class="property">data</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、App组件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--组件html标签--&gt;</span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=&quot;app&quot;&gt;</span><br><span class="line">    &lt;!--展示vue脚手架logo--&gt;</span><br><span class="line">    &lt;img src=&quot;./assets/1.jpg&quot; class=&quot;aa&quot;&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;!--主页--&gt;</span><br><span class="line">    &lt;router-link to=&quot;/&quot;&gt;主页&lt;/router-link&gt;</span><br><span class="line">    &lt;!--用户管理--&gt;</span><br><span class="line">    &lt;router-link to=&quot;/user&quot;&gt;用户管理&lt;/router-link&gt;</span><br><span class="line">    &lt;!--学生管理--&gt;</span><br><span class="line">    &lt;router-link to=&quot;/student&quot;&gt;学生管理&lt;/router-link&gt;</span><br><span class="line">    &lt;!--展示路由组件--&gt;</span><br><span class="line">    &lt;router-view/&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;!--组件中js代码--&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#x27;App&#x27;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4、index.js</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Router</span> <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="comment">//@ 代表src目录</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">HelloWorld</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/HelloWorld&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">User</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/User&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Student</span> <span class="keyword">from</span> <span class="string">&quot;../components/Student&quot;</span>;</span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Router</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Router</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;HelloWorld&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">HelloWorld</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/user&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;user&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">User</span></span><br><span class="line">    &#125;,&#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/student&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;student&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">Student</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>启动项目测试一下：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-135915.png" alt="image-20210724091247957"></p>
+<p>成功查询到数据！！！</p>
+<h3 id="5、开发vue-cli项目-二"><a href="#5、开发vue-cli项目-二" class="headerlink" title="5、开发vue cli项目(二)"></a>5、开发vue cli项目(二)</h3><h2 id="VueX-状态管理"><a href="#VueX-状态管理" class="headerlink" title="VueX 状态管理"></a>VueX 状态管理</h2><h3 id="1、简介-amp-安装"><a href="#1、简介-amp-安装" class="headerlink" title="1、简介&amp;安装"></a>1、简介&amp;安装</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.简介</span></span><br><span class="line"><span class="bullet">-</span> Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化</span><br><span class="line"></span><br><span class="line"><span class="section"># 2.安装vuex</span></span><br><span class="line"><span class="bullet">-</span>	npm install vuex --save</span><br><span class="line"></span><br><span class="line"><span class="section"># 3.创建vue cli中创建store文件夹</span></span><br><span class="line"></span><br><span class="line"><span class="section"># 4.在stroe中创建index.js文件</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vuex</span> <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"><span class="comment">//1.安装vuex</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Vuex</span>);</span><br><span class="line"><span class="comment">//2.创建store对象</span></span><br><span class="line"><span class="keyword">const</span> store = <span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">  </span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//3.暴露store对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 5.在main.js中引入stroe并注册到vue实例</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&quot;./stroe&quot;</span>;<span class="comment">//引入store</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="property">config</span>.<span class="property">productionTip</span> = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">  router,</span><br><span class="line">  <span class="attr">components</span>: &#123; <span class="title class_">App</span> &#125;,</span><br><span class="line">  <span class="attr">template</span>: <span class="string">&#x27;&lt;App/&gt;&#x27;</span>,</span><br><span class="line">  store,<span class="comment">//注册状态</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、state属性"><a href="#2、state属性" class="headerlink" title="2、state属性"></a>2、state属性</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.state属性</span></span><br><span class="line"><span class="bullet">-</span> 作用: 用来全局定义一些共享的数据状态</span><br><span class="line"></span><br><span class="line"><span class="section"># 2.语法</span></span><br><span class="line"><span class="code">    const store = new Vuex.Store(&#123;</span></span><br><span class="line"><span class="code">    	state:&#123;</span></span><br><span class="line"><span class="code">    		counter:0,//定义共享状态</span></span><br><span class="line"><span class="code">    	&#125;,</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.使用</span></span><br><span class="line"><span class="code">	 &#123;&#123;$store.state.counter&#125;&#125; ===&gt; &#123;&#123;this.$store.state.counter&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、mutations-属性"><a href="#3、mutations-属性" class="headerlink" title="3、mutations 属性"></a>3、mutations 属性</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.mutations 属性</span></span><br><span class="line"><span class="bullet">-</span> 作用: 用来定义对共享的数据修改的一系列函数</span><br><span class="line"></span><br><span class="line"><span class="section"># 2.语法</span></span><br><span class="line"><span class="code">    const store = new Vuex.Store(&#123;</span></span><br><span class="line"><span class="code">      state:&#123;</span></span><br><span class="line"><span class="code">        counter:0,//定义共享状态</span></span><br><span class="line"><span class="code">      &#125;,</span></span><br><span class="line"><span class="code">      mutations:&#123;</span></span><br><span class="line"><span class="code">        //增加</span></span><br><span class="line"><span class="code">        increment(state)&#123;</span></span><br><span class="line"><span class="code">          state.counter++</span></span><br><span class="line"><span class="code">        &#125;,</span></span><br><span class="line"><span class="code">        //减小</span></span><br><span class="line"><span class="code">        decrement(state)&#123;</span></span><br><span class="line"><span class="code">          state.counter--</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">      &#125;</span></span><br><span class="line"><span class="code">    &#125;);</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.使用</span></span><br><span class="line"><span class="code">	this.$store.commit(&#x27;decrement&#x27;);</span></span><br><span class="line"><span class="code">	this.$store.commit(&#x27;increment&#x27;);</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 4.mutations传递参数</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> a.定义带有参数的函数</span><br><span class="line"><span class="code">			mutations:&#123;</span></span><br><span class="line"><span class="code">     		//addCount 参数1:state 对象 参数2:自定义参数</span></span><br><span class="line"><span class="code">     		addCount(state,counter)&#123;</span></span><br><span class="line"><span class="code">        	console.log(counter);</span></span><br><span class="line"><span class="code">        	return  state.counter += counter ;</span></span><br><span class="line"><span class="code">      	&#125;</span></span><br><span class="line"><span class="code">    	&#125;</span></span><br><span class="line"><span class="code">- b.调用时传递参数</span></span><br><span class="line"><span class="code">		this.$store.commit(&#x27;addCount&#x27;,11);</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、getters-属性"><a href="#4、getters-属性" class="headerlink" title="4、getters 属性"></a>4、getters 属性</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 1.getters 属性</span></span><br><span class="line"><span class="bullet">-</span> 官方:  允许我们在 store 中定义“getter”（可以认为是 store 的计算属性）。就像计算属性一样，getter 的返回值会根据	</span><br><span class="line"><span class="code">	它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。</span></span><br><span class="line"><span class="code">- 作用: 用来定义对共享的数据的计算相关的一系列函数 相当于 computed 属性 会对结果进行缓存</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 2.语法</span></span><br><span class="line"><span class="code">	  getters:&#123;</span></span><br><span class="line"><span class="code">      //平方</span></span><br><span class="line"><span class="code">      mathSqrts(state)&#123;</span></span><br><span class="line"><span class="code">        console.log(&quot;--------&quot;);</span></span><br><span class="line"><span class="code">        return state.counter*state.counter;</span></span><br><span class="line"><span class="code">      &#125;,</span></span><br><span class="line"><span class="code">      //乘以一个数字</span></span><br><span class="line"><span class="code">      mathSqrtsNumber(state,getters)&#123;</span></span><br><span class="line"><span class="code">        return getters.mathSqrts*3;</span></span><br><span class="line"><span class="code">      &#125;,</span></span><br><span class="line"><span class="code">      //传递参数</span></span><br><span class="line"><span class="code">      mathSqrtsNumbers(state,getters)&#123;</span></span><br><span class="line"><span class="code">        return function (number)&#123;</span></span><br><span class="line"><span class="code">          return  number;</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">      &#125;</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section"># 3.使用</span></span><br><span class="line"><span class="bullet">-</span>		1.&#123;&#123;$store.getters.mathSqrts&#125;&#125;</span><br><span class="line"><span class="bullet">-</span>   2.&#123;&#123;$store.getters.mathSqrtsNumber&#125;&#125;</span><br><span class="line"><span class="bullet">-</span>   3.&#123;&#123;$store.getters.mathSqrtsNumbers(3)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5、练习"><a href="#5、练习" class="headerlink" title="5、练习"></a>5、练习</h3><p><strong>index.js</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span> <span class="comment">//vue.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vuex</span> <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span>  <span class="comment">//vuex.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//1. vue中使用vuex</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Vuex</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. 创建store对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">    <span class="comment">//state: 用来定义所有组件共享的数据</span></span><br><span class="line">    <span class="attr">state</span>:&#123;</span><br><span class="line">      <span class="attr">counter</span>:<span class="number">0</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//mutations: 用来定义对共享数据的修改方法</span></span><br><span class="line">    <span class="attr">mutations</span>:&#123;</span><br><span class="line">      <span class="title function_">incrCounter</span>(<span class="params">state</span>)&#123;</span><br><span class="line">        state.<span class="property">counter</span>++;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="title function_">decrCounter</span>(<span class="params">state</span>)&#123;</span><br><span class="line">        state.<span class="property">counter</span>--;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="title function_">incrCounterCount</span>(<span class="params">state,count</span>)&#123;</span><br><span class="line">        state.<span class="property">counter</span> += count;</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">   <span class="comment">//getters: 相当于store共享数据计算属性，该计算属性中方法只会执行一次，只有计算属性值发生变化才会重新计算，相当于之前的computed属性</span></span><br><span class="line">   <span class="attr">getters</span>:&#123;</span><br><span class="line">      <span class="title function_">incrCount</span>(<span class="params">state</span>)&#123;  <span class="comment">//二次渲染计算</span></span><br><span class="line">          <span class="keyword">return</span> state.<span class="property">counter</span> + <span class="number">10</span>;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="title function_">match</span>(<span class="params">state,getters</span>)&#123;</span><br><span class="line">          <span class="keyword">return</span> getters.<span class="property">incrCount</span> * <span class="number">2</span>;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>User.vue</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h1&gt;用户管理--&#123;&#123;this.$store.state.counter&#125;&#125;--&#123;&#123;this.$store.getters.incrCount&#125;&#125;--&#123;&#123;this.$store.getters.match&#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;input type=&quot;button&quot; value=&quot;点我修改共享数据counter++&quot; @click=&quot;changeStoreCounter&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;button&quot; value=&quot;点我修改共享数据counter--&quot; @click=&quot;decrStoreCounter&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;button&quot; value=&quot;点我修改共享数据counter+5&quot; @click=&quot;changeStoreCounterFive&quot;&gt;</span><br><span class="line">    &lt;router-link to=&quot;/user/add&quot; style=&quot;float: left&quot;&gt;添加用户信息&lt;/router-link&gt;</span><br><span class="line">    &lt;table border=&quot;1&quot; width=&quot;100%&quot;&gt;</span><br><span class="line">      &lt;tr&gt;</span><br><span class="line">        &lt;th&gt;编号&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;姓名&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;年龄&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;工资&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;操作&lt;/th&gt;</span><br><span class="line">      &lt;/tr&gt;</span><br><span class="line">      &lt;tr v-for=&quot;(user,index) in users&quot; :key=&quot;user.id&quot; &gt;</span><br><span class="line">        &lt;td&gt;&#123;&#123;user.id&#125;&#125;&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;&#123;&#123;user.name&#125;&#125;&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;&#123;&#123;user.age &#125;&#125;&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;&#123;&#123;user.des&#125;&#125;&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;&lt;a href=&quot;javascript:;&quot; @click=&quot;delUser(user.id)&quot;&gt;删除&lt;/a&gt; &lt;router-link to=&quot;/user/add?id=user.id&amp;name&quot; &gt;修改&lt;/router-link&gt;&lt;/td&gt;</span><br><span class="line">      &lt;/tr&gt;</span><br><span class="line">    &lt;/table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;!--显示子组件路由--&gt;</span><br><span class="line">    &lt;router-view&gt;&lt;/router-view&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &quot;User&quot;,</span><br><span class="line">  data()&#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      users:[],//定义数组</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods:&#123;</span><br><span class="line">    findAll()&#123;</span><br><span class="line">      this.$http.get(&quot;http://localhost:8990/users&quot;).then(res=&gt;&#123;</span><br><span class="line">        console.log(res.data);</span><br><span class="line">        this.users = res.data;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    delUser(id)&#123;</span><br><span class="line">      //友情提醒删除</span><br><span class="line">      if(window.confirm(&quot;您确定要删除这条记录吗？&quot;))&#123;</span><br><span class="line">        this.$http.delete(&quot;http://localhost:8990/delete/&quot;+id).then(res=&gt;&#123;</span><br><span class="line">          alert(&quot;用户信息删除成功!&quot;);</span><br><span class="line">          this.findAll(); ////调用查询所有</span><br><span class="line">        &#125;).catch(err=&gt;&#123;</span><br><span class="line">          alert(&quot;用户信息删除失败!&quot;);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    changeStoreCounter()&#123;</span><br><span class="line">       //修改共享数据counter++</span><br><span class="line">      this.$store.commit(&#x27;incrCounter&#x27;);</span><br><span class="line">    &#125;,</span><br><span class="line">    decrStoreCounter()&#123;</span><br><span class="line">      //修改共享数据counter--</span><br><span class="line">      this.$store.commit(&#x27;decrCounter&#x27;);</span><br><span class="line">    &#125;,</span><br><span class="line">    changeStoreCounterFive()&#123;</span><br><span class="line">      //修改共享数据counter+5</span><br><span class="line">      this.$store.commit(&#x27;incrCounterCount&#x27;,5);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  computed:&#123;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  created() &#123; //初始化阶段发送请求查询所有用户信息</span><br><span class="line">    this.findAll();</span><br><span class="line">  &#125;,  //user  /user/add /user/edit</span><br><span class="line">  beforeRouteUpdate(to,from,next)&#123; //当前组件中路由更新时自动触发的函数</span><br><span class="line">    this.findAll();</span><br><span class="line">    next(); //放行后路由后续操作</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  th&#123;</span><br><span class="line">    background-color: beige;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://yichenfirst.github.io/2021/08/01/%E5%89%8D%E7%AB%AF/vue%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8Evuex/" title="vue脚手架与vuex" target="_blank" rel="external">https://yichenfirst.github.io/2021/08/01/前端/vue脚手架与vuex/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">逸辰</span><small class="ml-1x">后端开发</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/08/31/mysql/mysql/" title="mysql基础"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/07/30/%E5%89%8D%E7%AB%AF/vue%E7%AC%94%E8%AE%B0/" title="vue笔记"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        &copy; 2023 逸辰
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

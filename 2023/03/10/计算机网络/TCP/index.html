@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>TCP协议 | 逸辰</title>
+  <meta name="description" content="TCP特点报文格式 连接管理建立连接假设一台主机（客户）上的一个进程相遇另一台主机（服务器）上的一个进程建立一条连接，客户应用进程首先会通知客户TCP，它想要建立一个与服务器上某个进程之间的连接，客户中的TCP会用以下的步骤与服务器中的TCP建立一条TCP连接：  建立TCP连接时，客户端进程A会像服务端进程B发送连接请求报文段，这时首部中的同步位SYN &#x3D; 1，同时生成一个初始序号se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP协议">
+<meta property="og:url" content="https://yichenfirst.github.io/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/index.html">
+<meta property="og:site_name" content="逸辰">
+<meta property="og:description" content="TCP特点报文格式 连接管理建立连接假设一台主机（客户）上的一个进程相遇另一台主机（服务器）上的一个进程建立一条连接，客户应用进程首先会通知客户TCP，它想要建立一个与服务器上某个进程之间的连接，客户中的TCP会用以下的步骤与服务器中的TCP建立一条TCP连接：  建立TCP连接时，客户端进程A会像服务端进程B发送连接请求报文段，这时首部中的同步位SYN &#x3D; 1，同时生成一个初始序号se">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165409.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165415.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165421.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165426.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165433.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165439.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165444.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165448.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165453.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165459.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165504.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165508.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165512.png">
+<meta property="article:published_time" content="2023-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-16T08:56:38.734Z">
+<meta property="article:author" content="逸辰">
+<meta property="article:tag" content="tcp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165409.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://yichenfirst.github.io/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="逸辰" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">逸辰</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">后端开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 长春，中国</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aop/" rel="tag">aop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsecurity/" rel="tag">springsecurity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/token/" rel="tag">token</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/aop/" style="font-size: 13px;">aop</a> <a href="/tags/docker/" style="font-size: 13px;">docker</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/mybatis/" style="font-size: 13px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/redis/" style="font-size: 13px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/springcloud/" style="font-size: 13px;">springcloud</a> <a href="/tags/springsecurity/" style="font-size: 13px;">springsecurity</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/token/" style="font-size: 13px;">token</a> <a href="/tags/vue/" style="font-size: 13.5px;">vue</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/07/15/%E9%9D%A2%E8%AF%95/Java%E7%9B%B8%E5%85%B3/" class="title">面试总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-07-15T12:46:54.418Z" itemprop="datePublished">2023-07-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/" class="title">TCP协议</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-09T16:00:00.000Z" itemprop="datePublished">2023-03-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/01/03/spring/Spring%20AOP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring AOP源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-01-02T16:00:00.000Z" itemprop="datePublished">2023-01-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/26/spring/Spring%20IOC%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring IOC源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-25T16:00:00.000Z" itemprop="datePublished">2022-12-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/03/spring/spring%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/" class="title">spring源码编译</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-02T16:00:00.000Z" itemprop="datePublished">2022-12-03</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-计算机网络/TCP" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      TCP协议
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/" class="article-date">
+	  <time datetime="2023-03-09T16:00:00.000Z" itemprop="datePublished">2023-03-10</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/tcp/" rel="tag">tcp</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 7k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 24(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><h3 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h3><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165409.png" alt="tcp报文格式"></p>
+<h3 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h3><h4 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h4><p>假设一台主机（客户）上的一个进程相遇另一台主机（服务器）上的一个进程建立一条连接，客户应用进程首先会通知客户TCP，它想要建立一个与服务器上某个进程之间的连接，客户中的TCP会用以下的步骤与服务器中的TCP建立一条TCP连接：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165415.png" alt="三次握手"></p>
+<p>建立TCP连接时，客户端进程A会像服务端进程B发送连接请求报文段，这时首部中的同步位SYN &#x3D; 1，同时生成一个初始序号seq &#x3D; x。TCP规定，SYN报文段（SYN&#x3D;1的报文段）不能携带数据，但是要消耗掉一个序号。这时，TCP客户端进入SYN-SENT（同步已发送）状态。</p>
+<p>B收到连接请求报文后，如同意建立连接，则向A发送确认。在确认报文中应把SYN位和ACK位都置1，确认号ack &#x3D; x + 1，同时生成一个徐序号seq &#x3D; y。注意，这个报文段也不能携带数据，但是同样要消耗一个序号。这时TCP服务器进入TCP-RCVD（同步收到）状态。</p>
+<p>客户端A收到B的确认后，还要向B给出确认。确认报文段的ACK置1，确认号ack &#x3D; y + 1，而自己的序号seq &#x3D; x + 1。TCP标准规定，ACK报文段可以携带数据。但如果不携带数据则不消耗序号，在这种情况下，下一个数据报文段的序号仍是seq &#x3D; x + 1。这时，TCP连接已经建立，A进入ESTABLISHED（已建立连接）状态。</p>
+<p>当B收到A的确认后，也进入ESTABLISHED状态。</p>
+<p><strong>为什么A最后还要发送一次确认呢？</strong></p>
+<p><strong>答：</strong> </p>
+<ol>
+<li><strong>防止已失效的连接请求报文突然又传送到了B</strong></li>
+</ol>
+<p>如果A最后不向B发出确认。当A向B发出第一个连接请求报文，但是由于网络原因长时间未到达B。于是A重传一次连接请求，B收到后向A出发确认报文，建立TCP连接。这时A第一次发送的连接请求报文到达B，B也会向A发送确认报文并建立TCP连接，但是这条TCP并不会进行数据传输，造成了资源的浪费。</p>
+<p>A最后向B发送确认，可以防止上述现象的发生。例如在刚才的异常情况下，A不会向B发送确认报文（通过seq与ack），由于B没有收到确认报文，就不会建立TCP连接。</p>
+<ol start="2">
+<li><strong>同步双方的初始序列号</strong></li>
+</ol>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165421.png" alt="同步序列号"></p>
+<p>如图，同步一段的序列号需要发送两次请求，一次SYN同步请求，一次ACK确认请求。但是由于服务器端ACK和SYN请求可以合并，所以同步双方序列号只需要三次握手。当只有两次握手时，客户端不会对服务端的SYN进行确认，所以服务端的序号无法同步成功。</p>
+<p><strong>为什么每次建立 TCP 连接时，初始化的序列号都要求不一样呢？</strong></p>
+<h4 id="关闭连接"><a href="#关闭连接" class="headerlink" title="关闭连接"></a>关闭连接</h4><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165426.png" alt="TCP连接释放"></p>
+<p>数据传输结束后，双方都可以释放连接。如何，客户端A先发出连接释放报文段，并停止发送数据，主动关闭TCP连接。A报连接释放报文首部的终止控制位FIN置1，序号seq &#x3D; u，它等于前面已传送过的数据的最后一个字节的序号加1.这时A进入FIN-WAIT-1（终止等待1）状态，等待B的确认。TCP规定，FIN报文即使不携带数据，它也消耗掉一个序号。</p>
+<p>B收到连接释放报文后即发出确认报文，确认号是ack &#x3D; u + 1，而这个报文段自己的序号的v，等于B前面已传送过的数据的最后一个字节的序号加1。然后B就进入CLOASE-WAIT（关闭等待）状态。TCP服务器进程这时应通知高层应用进程，因而从A到B这个方向的连接就释放了，这时TCP连接处于半关闭状态，即A已经没有数据发送的能力，但B若发送数据，A仍要接受。</p>
+<p>A收到B的确认后，进入FIN-WAIT-2（终止等待2）状态，等待B发出的连接释放报文段。</p>
+<p>若B已经没有要向A发送的数据，其应用程序就通知TCP释放连接。这时B发送的连接释放报文段必须使FIN&#x3D;1。现假设B的序号为w（在半关闭状态B可能又发送了一些数据）。B还必须重复上次已发送过的确认号ack &#x3D; u + 1。这时B就进入LAST-ACK（最后确认）状态，等待A的确认。</p>
+<p>A在收到B的连接释放报文段后，必须对此发出确认。在确认报文段中把ACK置1，确认号ACK &#x3D; w + 1，而自己的需要seq &#x3D; u + 1（根据TCP标准，前面发送的FIN报文段要消耗一个序号）。然后进入到TIME-WAIT（时间等待）状态。注意，此时TCP连接还没有释放掉，必须经过时间等待计时器设置的时间2MSL后，A才进入到CLOSED状态。MSL叫最长报文段寿命。</p>
+<p>也就是说，A主动释放TCP连接，需要发送FIN报文通知B自己没有数据发送需要发送，B会对返回A一个ACK确认报文，当B没有数据发送时会向A发送一个FIN报文表示自己没有数据需要发送，A发送确认报文后，等待2MSL后TCP连接就关闭了。</p>
+<p>除时间等待计时器外，TCP还设有一个保活计时器，当客户端与服务端建立TCP连接后，客户端突然出现故障，服务端无法收到来自客户端的消息。因此，需要有措施使服务器不再白白等待下去。这就是保活计时器。服务器每收到一次客户端数据，就重新设置保活计时器，时间设置通常是两小时，若两小时没有收到客户的数据，服务端就发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测blown后仍无客户端的响应，服务端就认为客户端出现故障，接着关闭这个连接。</p>
+<p><strong>为什么A在TIME-WAIT状态必须等待2MSL的时间</strong></p>
+<p>第一，为了保证A发送的最后一个ACK报文段能够到达B。这个ACK报文段有可能丢失，因此使处在LAST-ACK状态的B收不到已发送的FIN+ACK报文的确认。B会超时重传这个FIN+ACK报文段，而A就能在2MSL时间内收到这个重传的报文，接着A重传一次确认，重新启动2MSL计时器。最后，A和B都能正常进入到CLOSED状态。如果A在TIME-WAIT状态不等待一段时间，而是在发送完ACK报文后立即释放连接，那么就无法收到重传的FIN+ACK报文，也就不会再一次发送确认报文，这样B就不会按正常步骤进入CLOSED状态。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165433.png" alt="历史连接.drawio"></p>
+<p>第二，如图，服务端在关闭连接之前发送的seq &#x3D; 301报文，被网络延迟了。接着，服务端以相同的四元组重新打开了新连接，前面被延迟的seq &#x3D; 301这时抵达客户端，而且该数据报文的序列号刚好在客户端接受窗口内，因此客户端会正常接受这个数据报文，但是这个数据报文是上一个连接残留下来的，这样就产生数据错乱等严重的问题。</p>
+<p>为了防止历史连接中的数据，被后面相同四元组的连接错误的接收，因此 TCP 设计了 TIME_WAIT 状态，状态会持续 2MSL 时长，这个时间足以让两个方向上的数据包都被丢弃，使得原来连接的数据包在网络中都自然消失，再出现的数据包一定都是新建立连接所产生的。</p>
+<p><strong>为什么需要四次握手</strong></p>
+<p>主要是当客户端主动关闭连接时，服务端可能还有数据发送，所以不能立马关闭连接，需要等客户端和服务端都没有数据发送时才能关闭，客户端和服务端都需要向对方发送一次FIN报文，以及对方需要返回一个ACK报文。</p>
+<p><strong>TIME_WAIT过多有什么危害</strong></p>
+<p>第一占用系统资源，比如文件描述符，内存资源，CPU资源，线程资源</p>
+<p>第二占用端口资源</p>
+<p><strong>服务器出现大量TIME_WAIT状态的原因有哪些？</strong></p>
+<p>TIME_WAIT是主动关闭连接放才会出现的状态，服务器产生大量TIME_WAIT说明服务器关闭了大量TCP连接。</p>
+<p>第一，<strong>客户端与服务器至少一方禁用了HTTP keep-alive</strong>。一般来说不管哪一方禁用了HTTP keep-alive都是由服务端主动关闭连接。因此任意一方没有开启HTTP keep-alive都会导致服务端在处理完一个HTTP请求后，就主动关闭连接，此时服务端上就会出现大量的TIME_WAIT。</p>
+<p>第二，HTTP长连接超时。HTTP长连接可以在同一个TCP连接上接受和发送多个HTTP请求&#x2F;应答，避免了连接建立和释放的开销。为了避免资源浪费的情况，web服务器一般会提供一个参数，用来制定指定HTTP长连接的超时时间，比如nginx提供的keepalive_timeout参数。如果keepalive_time &#x3D; 60，客户端在完成一次HTTP请求后，在60秒内都没有在发起新的请求，nginx会触发回调函数关闭连接，那么服务器上就会出现TIME_WAIT状态的连接。</p>
+<p>当服务端出现大量 TIME_WAIT 状态的连接时，如果现象是有大量的客户端建立完 TCP 连接后，很长一段时间没有发送数据，那么大概率就是因为 HTTP 长连接超时，导致服务端主动关闭连接，产生大量处于 TIME_WAIT 状态的连接。</p>
+<p>可以往网络问题的方向排查，比如是否是因为<strong>网络问题</strong>，导致客户端发送的数据一直没有被服务端接收到，以至于 HTTP 长连接超时。</p>
+<p>第三，HTTP长连接请求数达到上限。Web 服务端通常会有个参数，来定义一条 HTTP 长连接上最大能处理的请求数量，当超过最大限制时，就会主动关闭连接。</p>
+<p>比如 nginx 的 keepalive_requests 这个参数，这个参数是指一个 HTTP 长连接建立之后，nginx 就会为这个连接设置一个计数器，记录这个 HTTP 长连接上已经接收并处理的客户端请求的数量。<strong>如果达到这个参数设置的最大值时，则 nginx 会主动关闭这个长连接</strong>，那么此时服务端上就会出现 TIME_WAIT 状态的连接。</p>
+<p>keepalive_requests 参数的默认值是 100 ，意味着每个 HTTP 长连接最多只能跑 100 次请求，这个参数往往被大多数人忽略，因为当 QPS (每秒请求数) 不是很高时，默认值 100 凑合够用。</p>
+<p>但是，<strong>对于一些 QPS 比较高的场景，比如超过 10000 QPS，甚至达到 30000 , 50000 甚至更高，如果 keepalive_requests 参数值是 100，这时候就 nginx 就会很频繁地关闭连接，那么此时服务端上就会出大量的 TIME_WAIT 状态</strong>。</p>
+<p>针对这个场景下，解决的方式也很简单，调大 nginx 的 keepalive_requests 参数就行。</p>
+<p><strong>服务器出现大量 CLOSE_WAIT 状态的原因有哪些？</strong></p>
+<p>CLOSE_WAIT 状态是「被动关闭方」才会有的状态，而且如果「被动关闭方」没有调用 close 函数关闭连接，那么就无法发出 FIN 报文，从而无法使得 CLOSE_WAIT 状态的连接转变为 LAST_ACK 状态。</p>
+<p>所以，<strong>当服务端出现大量 CLOSE_WAIT 状态的连接的时候，说明服务端的程序没有调用 close 函数关闭连接</strong>。</p>
+<h3 id="可靠传输"><a href="#可靠传输" class="headerlink" title="可靠传输"></a>可靠传输</h3><p>TCP发送的报文时交给IP才层传送的，但IP层只能提供尽最大努力服务，因此TCP下面的网络提供的是不可靠的传输。因此TCP必须采用适当的措施才能使两个运输层之间的通信变得可靠。</p>
+<h4 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h4><p>停止等待协议可用下图（a）说明。图描述的是没有出现差错的情况。A发送分组M1，发送完就暂停发送，等待B的确认。B收到M1就向A发送确认。A在收到了对M1的确认后，就在发送下一个分组M2。同样，在收到B对M2的确认后，再发送M3。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165439.png" alt="停止等待协议"></p>
+<p>当传输出现错误时，如图b所示。A发送的分组M1在传输过程中出现错误（丢失或出现差错），B不会向A进行确认，当A超过一段时间没有收到确认，就会认为刚才发送的分组丢失了，因此hi重传恰年发送过的分组。有三点需要注意，第一，A在发送完一个分组后，必须暂时保留已发送的分组分副本。第二，分组和确认分组都必须进行编号。这样才能明确是哪一个发送出去的分组收到确认，而哪一个分组没有收到确认。第三，超时计时器设置的重传时间应当比数据在分组传输的平均往返时间更长一些。</p>
+<p>使用上述的确认和重传机制，就可以在不可靠的传输网络上实现可靠的通信。像上述的这种可靠传输协议常称为自动重传请求ARQ（Automatic Repeat request）。</p>
+<h4 id="连续ARQ协议"><a href="#连续ARQ协议" class="headerlink" title="连续ARQ协议"></a>连续ARQ协议</h4><p>为了提高效率，发送方可以不使用低效率的停止等待协议，而是采用流水线传输。流水线传输就是发送方可以连续发送多个分组，不必每发送完一个分组就停顿下来等待对方的确认。这样可使信道上一直有数据不间断地在传送，这种传输方式可以获得很高的新到利用率。当使用流水线传输时，就需要使用连续ARQ协议和滑动窗口协议。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165444.png" alt="连续ARQ协议工作原理"></p>
+<p>如图，当传送数据的顺序时1～12，滑动窗口的大小是5。发送方会连续发送滑动窗口内的分组，而不需要等待接收到的确认。当收到接受方的确认后，滑动窗口会向数据传输方向移动。图b，发送方接收到分组1的确认，则滑动窗口向前移动，然后发送窗口内没发送的分组。</p>
+<p>接收方 一般都是采用累积确认的方式。这就是说，接收方不必对收到的分组逐个发送确认，而是在收到几个分组后，<strong>对按序到达的最后一个分组发送确认</strong>，这就表示:到这个分组为止的所有分组都已正确收到了。 累积确认有优点也有缺点。优点是:容易实现，即使确认丢失也不必重传。但缺点是 不能向发送方反映出接收方己经正确收到的所有分组的信息。 例如，如果发送方发送了前5 个分组，而中间的第3个分组丢失了。这时接收方只能对前两个分组发出确认。发送方无法知道后面三个分组的下落，而只好把后面的三个分组都 再重传一次 。 这就叫做 Go-back-N (回退N )，表示需要再退回来重传己发 送过的N个分组。可见当通信线路质量不好时，连续ARQ 协议会带来负面的影响。</p>
+<h4 id="选择确认SACK"><a href="#选择确认SACK" class="headerlink" title="选择确认SACK"></a>选择确认SACK</h4><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165448.png" alt="SACK"></p>
+<p>如果接收到的报文段无差错，只是未按序号，中间缺少一些序号的数据，那么能否只传送缺少的数据而不重传已经正确到达接收方的数据？选择确认（SACK）就是一种可行的处理方法。</p>
+<p>TCP的接收方在接受对方发过来的数据字节流的序号不连续，结果形成了一些不连续的字节块，如上图。可以看出序号1<del>1500收到了，但序号1001</del>1500没有收到。接下来的字节流又收到了，可是又缺少了3001 ~ 3500。再后面从序号4501 起又没有收到。也就是说，接收方收到了和前面的字节流不连续的两个字节块。如果这些字节的序号都在接收窗又之内，那么 接收方就先收 下这些数据，但要把这些信息准确地告诉发送方，使发送方不要再重复发送这 些已收到的数据。</p>
+<p>从图中可以看出呵前后字节不连续的每一个字节块都有两个边界：左边界和右边界。因此一个字节块需要两个指针进行标记。TCP 的首部没有哪个字段能够提供上述这些字节块的边界信息。RFC 2018 规定，如果要使用选择确认SACK，那么在建立TCP连接时，就要在ICP 首部的选项中加 上“ 允许SACK〞的选项，而双方必须都事先商定好。如果使用选择确认，那么原来首部中 的“确认号字段” 的用法仍然不变。只是以后在 TCP 报文段的首部中都增加了SACK 选 项，以便报告收到的不连续的字节块的边界。由于首部选项的长度最多只有 40 字节，而指明一个边界就要用掉4字节 ( 因为序号有32位 ，需要使用4个字节表示 )， 因此在选项中最多只能指明4 个字节块的边界信息。这是因为4 个字节块共有8 个边界，因而需要用 32 个 字节来描述。另外还需要两个字节。一个字节用来指明是SACK 选项，另一个字节是指明 这个选项要占用多少字节。如果要报告五个字节块的边界信息，那么至少需要42 个字节。 这就超过了选项长度的40字节的上限。</p>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><blockquote>
+<p>利用滑动窗口实现流量控制</p>
+</blockquote>
+<p>一般说来，我们总是希望数据传输得更快一些。但如果发送方把数据发送得过快，接收方就可能来不及接收，这就会造成数据的丢失。所谓<strong>流量控制(flow control)就是让发送方 的发送速率不要太快，要让接收方来得及接收</strong>。</p>
+<p>利用滑动窗又机制可以很方便地在TCP 连接上实现对发送方的流量控制。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165453.png" alt="流量控制"></p>
+<p>设A向B发送数据。在连接建立时，B告诉了A: “我的接收窗又rwnd &#x3D; 400” (这 里 rwnd 表示receiver window)。因此，发送方的发送窗又不能超过接收方给出的接收窗口的<br>数值。请注意，TCP 的窗又单位是字节，不是报文段。TCP 连接建立时的窗又协商过程在图中没有展示出来。再设每一个报文段为 100 字节长，而数据报文段序号的初始值设为1。 请注意 ， 图中箭头上面大写ACK 表示首部中的确认位ACK，小写ack 表示确认字段的值。<br>我们应注意到，接收方的主机B进行了三次流量控制。第一次把窗又减小到rwnd &#x3D; 300, 第二次又减到rwnd&#x3D;100，最后减到rwnd &#x3D;0，即不允许发送方再发送数据了。这种使发送方暂停发送的状态將持续到主机B 重新发出一个新的窗又值为止。我们还应注意到，B 向 A 发送的三个报文段都设置了ACK &#x3D; 1，只有在ACK &#x3D; 1 时确认号字段才有意义。<br>现在我们考虑一种情况。在图5-22 中，B 向A 发送了零窗又的报文段后不久，B 的接 收缓存又有了一些存储空间。于是B向A发送了rwnd&#x3D; 400的报文段。然而这个报文段在传送过程中丢失了 。 A一直等待收到B发送的非零窗又的通知 ， 而B也一直等待A发 送 的数据。如果没有其他措施，这种互相等待的死锁局面将一直延续下去。 </p>
+<p>为了解决这个问题，TCP 为每一个连接设有一个持续计时器(persistence timer)。只要TCP 连接的一方收到对方的零窗又通知，就启动持续计时器。若持续计时器设置的时间到期，就发送一个零窗又探测报文段 (仅携带 1 字节的数据)。，而对方就在确认这个探测报文段时给出了现在的窗又值。如果窗又仍然是零，那么收到这个报文段的 一方就重新设置持 续计时器。如果窗又不是零，那么死锁的僵局就可以打破 了。</p>
+<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><blockquote>
+<p>为什么要有拥塞控制，不是有流量控制了吗</p>
+</blockquote>
+<p>流量控制是避免发送方得数据填满接收方的缓存，但是并不知道网络的中发生了什么。</p>
+<p>一般来说，计算机网络都处在一个共享的环境。因此也有可能会因为其他主机之间的通信使得网络拥堵。在网络出现拥堵时，如果继续发送大量数据包，可能会导致数据包时延、丢失等，这时 TCP 就会重传数据，但是一重传就会导致网络的负担更重，于是会导致更大的延迟以及更多的丢包，这个情况就会进入恶性循环被不断地放大….</p>
+<p>所以，TCP 不能忽略网络上发生的事，<strong>当网络发送拥塞时，TCP 会自我牺牲，降低发送的数据量。</strong></p>
+<p>于是，就有了<strong>拥塞控制</strong>，控制的目的就是<strong>避免「发送方」的数据填满整个网络。</strong></p>
+<p>为了在「发送方」调节所要发送数据的量，定义了一个叫做「<strong>拥塞窗口</strong>」的概念。</p>
+<blockquote>
+<p>什么事拥塞窗口？和发送窗口有什么关系？</p>
+</blockquote>
+<p><strong>拥塞窗口cwnd</strong>是发送方维护的一个状态变量，它会<strong>根据网络的拥塞程度动态变化。</strong></p>
+<p>发送窗口swnd和接受窗口rwnd是约等于的关系，加入拥塞窗口的概念口，此时发送窗口swnd &#x3D; min(cwnd，rwnd)，也就是拥塞窗口和接受窗口中的最小值。</p>
+<p>拥塞窗口cwnd变化的规则：</p>
+<ul>
+<li>只要网络中没有出现拥塞，cwnd就会增大</li>
+<li>但是网络中出现了拥塞，cwnd就减少</li>
+</ul>
+<p>只要发送方没有在规定时间内接收到ACK应答报文，也就是<strong>发生了超时重传，就会认为网络出现了拥塞。</strong></p>
+<blockquote>
+<p>拥塞控制的相关算法</p>
+</blockquote>
+<ul>
+<li>慢启动</li>
+<li>拥塞避免</li>
+<li>拥塞发生</li>
+<li>快速恢复</li>
+</ul>
+<h4 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h4><p>TCP在刚建立连接完成后，首先是有一个慢启动的过程，这个慢启动的意思就是一点一点的提高发送数据包的数量，如果刚开始就发送大量的数据，很容易就会造成网络的拥堵。</p>
+<p>慢启动算法规则：<strong>当发送方没收到一个ACK，拥塞窗口cwnd的大小就会加1。</strong></p>
+<p>假设拥塞窗口cwnd和发送窗口相等，下面举个例子：</p>
+<ul>
+<li>连接建立完成后，一开始初始化cwnd &#x3D; 1，标识可以传送一个MSS大小的数据</li>
+<li>当收到一个ACK确认应答后，cwnd增加1，于是一次可以发送2个</li>
+<li>当收到2个ACK确认应答后，cwnd加2，于是就可以比之前多发送2个，所以这一次能发送4个</li>
+<li>当收到这4个ACK确认应答后，cwnd加4，所以这一次能发送8个</li>
+</ul>
+<p>满期启动算法的变化过程如下图：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165459.png" alt="慢启动"></p>
+<p>可以看出慢启动算法，发包的个数是指数型增长的。</p>
+<blockquote>
+<p>那慢启动涨到什么时候是个头呢?</p>
+</blockquote>
+<p>有一个叫慢启动门限<code>ssthresh</code>的状态变量</p>
+<ul>
+<li>当cwnd &lt; ssthresh时，使用慢启动算法</li>
+<li>当cwnd &gt; ssthresh时，使用拥塞避免算法</li>
+</ul>
+<h4 id="拥塞避免算法"><a href="#拥塞避免算法" class="headerlink" title="拥塞避免算法"></a>拥塞避免算法</h4><p>当拥塞窗口cwnd超过慢启动门限ssthresh就会进入拥塞避免算法。</p>
+<p>一般来说ssthresh的大小是65535字节。</p>
+<p>拥塞避免算法的规则是：<strong>每当收到一个ACK时，cwnd增加1&#x2F;cwnd。</strong></p>
+<p>接着上面面启动的例子，现在假定ssthresh为8：</p>
+<ul>
+<li>当发送放8个ACK确认应答后，每个确认增加1&#x2F;8,8个ACK确认cwnd一共增加1，于是这一次能发送9个MSS大小的数据，变成了线性增长。</li>
+</ul>
+<img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165504.png" alt="拥塞避免" style="zoom: 67%;" />
+
+<p>所以，我们可以发现，拥塞避免算法就是将原本慢启动算法的指数增长变成了线性增长，还是增长阶段，但是增长速度缓慢了一些。</p>
+<p>就这么一直增长着后，网络就会慢慢进入了拥塞的状况了，于是就会出现丢包现象，这时就需要对丢失的数据包进行重传。</p>
+<p>当触发了重传机制，也就进入了拥塞发生算法。</p>
+<h4 id="拥塞发生"><a href="#拥塞发生" class="headerlink" title="拥塞发生"></a>拥塞发生</h4><p>当网络出现拥塞，也就是会发生数据包重传，重传机制主要有两种：</p>
+<ul>
+<li>超时重传</li>
+<li>快速重传</li>
+</ul>
+<p>这两种使用的拥塞发送算法是不同的，接下来分别来说说。</p>
+<blockquote>
+<p>超时重传</p>
+</blockquote>
+<p>当发生了超时重传，则就会使用拥塞发生算法。</p>
+<ul>
+<li>ssthresh设为cwnd&#x2F;2</li>
+<li>cwnd重置1（重置为cwnd初始值，这里假定初始值1）</li>
+</ul>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165508.png" alt="拥塞发生-超时重传"></p>
+<p>当网络发生拥塞时，会重新开始慢启动，这种方式太激进，会造成网络卡顿。</p>
+<blockquote>
+<p>快速重传</p>
+</blockquote>
+<p>比超时重传更好的方式是，快速重传算法。当接收方发现丢了一个中间包的时候，发送三次前一个包的ACK，于是发送端就会快速地重传，不必等待超时再重传。</p>
+<p>TCP认为这种情况不严重，因为大部分没丢，只丢了一小部分，则ssthresh和cwnd变化如下：</p>
+<ul>
+<li>cwnd &#x3D; cwnd &#x2F; 2，也就是设置为原来的一般</li>
+<li>ssthresh &#x3D; cwnd</li>
+<li>进入快速恢复算法</li>
+</ul>
+<h4 id="快速恢复"><a href="#快速恢复" class="headerlink" title="快速恢复"></a>快速恢复</h4><p>快速重传和快速恢复算法一般同时使用，快速恢复算法认为，你还能收到3个重复ACK说明网络也不那么糟糕，所以没必要向超时那么激烈。</p>
+<p>进入快速恢复之前，<code>cwnd</code> 和 <code>ssthresh</code> 已被更新了：</p>
+<ul>
+<li><code>cwnd = cwnd/2</code> ，也就是设置为原来的一半;</li>
+<li><code>ssthresh = cwnd</code>;</li>
+</ul>
+<p>然后，进入快速恢复算法如下：</p>
+<ul>
+<li>拥塞窗口 <code>cwnd = ssthresh + 3</code> （ 3 的意思是确认有 3 个数据包被收到了）；</li>
+<li>重传丢失的数据包；</li>
+<li>如果再收到重复的 ACK，那么 cwnd 增加 1；</li>
+<li>如果收到新数据的 ACK 后，把 cwnd 设置为第一步中的 ssthresh 的值，原因是该 ACK 确认了新的数据，说明从 duplicated ACK 时的数据都已收到，该恢复过程已经结束，可以回到恢复之前的状态了，也即再次进入拥塞避免状态；</li>
+</ul>
+<p>快速恢复算法变化过程如下图：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-165512.png" alt="快速恢复"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://yichenfirst.github.io/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/" title="TCP协议" target="_blank" rel="external">https://yichenfirst.github.io/2023/03/10/计算机网络/TCP/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">逸辰</span><small class="ml-1x">后端开发</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/07/15/%E9%9D%A2%E8%AF%95/Java%E7%9B%B8%E5%85%B3/" title="面试总结"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/01/03/spring/Spring%20AOP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Spring AOP源码分析"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        &copy; 2023 逸辰
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

@@ -17,53 +17,54 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>ElasticSearch概述 | Hexo</title>
+  <title>ElasticSearch概述 | 逸辰</title>
   <meta name="description" content="ElasticSearch概述Elasticsearch是一个基于&#x3D;&#x3D;Lucene&#x3D;&#x3D;的搜索服务器。它提供了一个&#x3D;&#x3D;分布式多用户&#x3D;&#x3D;能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。Elastic">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ElasticSearch概述">
-<meta property="og:url" content="https://yichenfirst.github.io/2023/03/09/ElasticSearch/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://yichenfirst.github.io/2021/09/02/ElasticSearch/index.html">
+<meta property="og:site_name" content="逸辰">
 <meta property="og:description" content="ElasticSearch概述Elasticsearch是一个基于&#x3D;&#x3D;Lucene&#x3D;&#x3D;的搜索服务器。它提供了一个&#x3D;&#x3D;分布式多用户&#x3D;&#x3D;能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。Elastic">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902112051950.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902113009487.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902113401440.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902113446727.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902114619178.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902114848351.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902114935671.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902125930457.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902144619532.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902144636477.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902163730535.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902164013788.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902164253248.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902164343361.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902165031399.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210902165317096.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903132216983.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903132317837.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903133332456.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903135000448.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903135411508.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903135453262.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903140009417.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903140212885.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903140239903.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903182208742.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903191113022.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903191211977.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903191223700.png">
-<meta property="og:image" content="https://yichenfirst.github.io/images/image-20210903191243417.png">
-<meta property="article:published_time" content="2023-03-09T10:58:31.349Z">
-<meta property="article:modified_time" content="2021-09-03T12:50:48.910Z">
-<meta property="article:author" content="John Doe">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160906.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160910.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160913.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160914.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160918.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160920.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160922.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160926.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160929.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160931.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160938.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160940.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160942.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160945.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160950.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160951.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160955.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160957.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160959.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161002.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161004.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161006.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161007.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161010.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161012.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161015.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161019.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161021.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161023.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161027.png">
+<meta property="article:published_time" content="2021-09-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-16T08:11:57.287Z">
+<meta property="article:author" content="逸辰">
+<meta property="article:tag" content="ElasticSearch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yichenfirst.github.io/images/image-20210902112051950.png">
+<meta name="twitter:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160906.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://yichenfirst.github.io/2023/03/09/ElasticSearch/index.html">
+  <link rel="canonical" href="https://yichenfirst.github.io/2021/09/02/ElasticSearch/index.html">
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="逸辰" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png" type="image/x-icon">
@@ -85,12 +86,12 @@
       
       
       <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/cofess" target="_blank">
+        <a id="avatar" href="" target="_blank">
           <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
         </a>
-        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+        <h2 id="name" class="hidden-xs hidden-sm">逸辰</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">后端开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 长春，中国</small>
       </div>
       
       <div class="search" id="search-form-wrap">
@@ -168,63 +169,8 @@
           </a>
         </li>
         
-        
-        <li class="menu-item menu-item-repository">
-          <a href="/repository">
-            
-            <i class="icon icon-project"></i>
-            
-            <span class="menu-title">项目</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-books">
-          <a href="/books">
-            
-            <i class="icon icon-book-fill"></i>
-            
-            <span class="menu-title">书单</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">关于</span>
-          </a>
-        </li>
-        
       </ul>
       
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
     </nav>
   </div>
 </header>
@@ -246,18 +192,39 @@
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aop/" rel="tag">aop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsecurity/" rel="tag">springsecurity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/token/" rel="tag">token</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/aop/" style="font-size: 13px;">aop</a> <a href="/tags/docker/" style="font-size: 13px;">docker</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/mybatis/" style="font-size: 13px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/redis/" style="font-size: 13px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/springcloud/" style="font-size: 13px;">springcloud</a> <a href="/tags/springsecurity/" style="font-size: 13px;">springsecurity</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/token/" style="font-size: 13px;">token</a> <a href="/tags/vue/" style="font-size: 13.5px;">vue</a>
+    </div>
+  </div>
+
     
       
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">五月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -273,13 +240,13 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
               </p>
               <p class="item-title">
-                <a href="/2023/03/09/ElasticSearch/" class="title">ElasticSearch概述</a>
+                <a href="/2023/07/15/%E9%9D%A2%E8%AF%95/Java%E7%9B%B8%E5%85%B3/" class="title">面试总结</a>
               </p>
               <p class="item-date">
-                <time datetime="2023-03-09T10:58:31.349Z" itemprop="datePublished">2023-03-09</time>
+                <time datetime="2023-07-15T12:46:54.418Z" itemprop="datePublished">2023-07-15</time>
               </p>
             </div>
           </li>
@@ -288,13 +255,58 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
               </p>
               <p class="item-title">
-                <a href="/2023/03/09/hello-world/" class="title">Hello World</a>
+                <a href="/2023/03/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP/" class="title">TCP协议</a>
               </p>
               <p class="item-date">
-                <time datetime="2023-03-09T08:56:50.263Z" itemprop="datePublished">2023-03-09</time>
+                <time datetime="2023-03-09T16:00:00.000Z" itemprop="datePublished">2023-03-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/01/03/spring/Spring%20AOP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring AOP源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-01-02T16:00:00.000Z" itemprop="datePublished">2023-01-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/26/spring/Spring%20IOC%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="title">Spring IOC源码分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-25T16:00:00.000Z" itemprop="datePublished">2022-12-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring/">spring</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/12/03/spring/spring%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/" class="title">spring源码编译</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-12-02T16:00:00.000Z" itemprop="datePublished">2022-12-03</time>
               </p>
             </div>
           </li>
@@ -327,17 +339,41 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2023/03/09/ElasticSearch/" class="article-date">
-	  <time datetime="2023-03-09T10:58:31.349Z" itemprop="datePublished">2023-03-09</time>
+	<a href="/2021/09/02/ElasticSearch/" class="article-date">
+	  <time datetime="2021-09-01T16:00:00.000Z" itemprop="datePublished">2021-09-02</time>
 	</a>
 </span>
         
-        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/ElasticSearch/">ElasticSearch</a>
+  </span>
 
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a>
+  </span>
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/03/09/ElasticSearch/#comments" class="article-comment-link">评论</a></span>
+
         
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/09/02/ElasticSearch/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 16(分)</span>
+	
+
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
@@ -362,25 +398,25 @@
 <h2 id="ES安装及head插件安装"><a href="#ES安装及head插件安装" class="headerlink" title="ES安装及head插件安装"></a>ES安装及head插件安装</h2><h3 id="ES安装"><a href="#ES安装" class="headerlink" title="ES安装"></a>ES安装</h3><p><strong>ELK（Elasticsearch , Logstash, Kibana）版本要一致，解压即用（需要nodejs环境）</strong></p>
 <p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/start">https://www.elastic.co/start</a></p>
 <p>​						 <a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-windows-x86_64.zip">https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-windows-x86_64.zip</a></p>
-<p><img src="/images/image-20210902112051950.png" alt="image-20210902112051950"></p>
-<h3 id="熟悉目录结构"><a href="#熟悉目录结构" class="headerlink" title="熟悉目录结构"></a><strong>熟悉目录结构</strong></h3><p><img src="/images/image-20210902113009487.png" alt="image-20210902113009487"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160906.png" alt="image-20210902112051950"></p>
+<h3 id="熟悉目录结构"><a href="#熟悉目录结构" class="headerlink" title="熟悉目录结构"></a><strong>熟悉目录结构</strong></h3><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160910.png" alt="image-20210902113009487"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bin 启动文件</span><br><span class="line">config 配置文件</span><br><span class="line">	log4j2 日志配置文件</span><br><span class="line">	jvm.option 虚拟机相关配置文件</span><br><span class="line">	elasticsearch.yml   elasticsearch的配置文件 默认9200端口！跨域！</span><br><span class="line">lib 相关jar包</span><br><span class="line">models 功能模块</span><br><span class="line">plugins 插件 ik</span><br></pre></td></tr></table></figure>
 
 <h3 id="启动，访问9200"><a href="#启动，访问9200" class="headerlink" title="启动，访问9200"></a>启动，访问9200</h3><p>双击bin&#x2F;elasticsearch.bat</p>
-<p><img src="/images/image-20210902113401440.png" alt="image-20210902113401440"></p>
-<p><img src="/images/image-20210902113446727.png" alt="image-20210902113446727"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160913.png" alt="image-20210902113401440"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160914.png" alt="image-20210902113446727"></p>
 <h3 id="安装可视化界面es-head插件"><a href="#安装可视化界面es-head插件" class="headerlink" title="安装可视化界面es head插件"></a>安装可视化界面es head插件</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/mobz/elasticsearch-head">https://github.com/mobz/elasticsearch-head</a></p>
 <p>cnpm install 安装</p>
-<p><img src="/images/image-20210902114619178.png" alt="image-20210902114619178"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160918.png" alt="image-20210902114619178"></p>
 <p>cnpm run start 启动，访问9100</p>
-<p><img src="/images/image-20210902114848351.png" alt="image-20210902114848351"></p>
-<p><img src="/images/image-20210902114935671.png" alt="image-20210902114935671"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160920.png" alt="image-20210902114848351"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160922.png" alt="image-20210902114935671"></p>
 <p>出现跨域问题</p>
 <p>在elasticsearch的配置文件elasticsearch.yml中添加</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>再次访问9100</p>
-<p><img src="/images/image-20210902125930457.png" alt="image-20210902125930457"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160926.png" alt="image-20210902125930457"></p>
 <h2 id="ELK介绍"><a href="#ELK介绍" class="headerlink" title="ELK介绍"></a>ELK介绍</h2><p><strong>ELK</strong>是三个开源软件的缩写，分别表示：Elasticsearch , Logstash, Kibana , 它们都是开源软件。</p>
 <p><strong>Elasticsearch</strong>是个开源分布式搜索引擎，提供搜集、分析、存储数据三大功能。它的特点有：分布式，零配置，自动发现，索引自动分片，索引副本机制，restful风格接口，多数据源，自动搜索负载等。主要负责将日志索引并存储起来，方便业务方检索查询。</p>
 <p><strong>Logstash</strong> 主要是用来日志的搜集、分析、过滤日志的工具，支持大量的数据获取方式。一般工作方式为c&#x2F;s架构，client端安装在需要收集日志的主机上，server端负责将收到的各节点日志进行过滤、修改等操作在一并发往elasticsearch上去。是一个日志收集、过滤、转发的中间件，主要负责将各条业务线的各类日志统一收集、过滤后，转发给 Elasticsearch 进行下一步处理。</p>
@@ -388,8 +424,8 @@
 <h2 id="Kibana安装"><a href="#Kibana安装" class="headerlink" title="Kibana安装"></a>Kibana安装</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/downloads/kibana">https://www.elastic.co/downloads/kibana</a></p>
 <p>​						<a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86_64.zip">https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86_64.zip</a></p>
 <p>解压即用</p>
-<h3 id="启动，访问5601"><a href="#启动，访问5601" class="headerlink" title="启动，访问5601"></a>启动，访问5601</h3><p><img src="/images/image-20210902144619532.png" alt="image-20210902144619532"></p>
-<p><img src="/images/image-20210902144636477.png" alt="image-20210902144636477"></p>
+<h3 id="启动，访问5601"><a href="#启动，访问5601" class="headerlink" title="启动，访问5601"></a>启动，访问5601</h3><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160929.png" alt="image-20210902144619532"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160931.png" alt="image-20210902144636477"></p>
 <h3 id="汉化"><a href="#汉化" class="headerlink" title="汉化"></a>汉化</h3><p>在config&#x2F;kibana.yml中添加</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">i18n.locale:</span> <span class="string">&quot;zh-CN&quot;</span></span><br></pre></td></tr></table></figure>
 
@@ -466,21 +502,21 @@
 <h2 id="IK分词器"><a href="#IK分词器" class="headerlink" title="IK分词器"></a>IK分词器</h2><p>中文分词器：IK分词器</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><a target="_blank" rel="noopener" href="https://github.com/medcl/elasticsearch-analysis-ik">https://github.com/medcl/elasticsearch-analysis-ik</a></p>
 <p>解压到elasticsearch的plugins中</p>
-<p><img src="/images/image-20210902163730535.png" alt="image-20210902163730535"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160938.png" alt="image-20210902163730535"></p>
 <p>elasticsearch-plugin list查看加载的插件</p>
-<p><img src="/images/image-20210902164013788.png" alt="image-20210902164013788"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160940.png" alt="image-20210902164013788"></p>
 <p>在kibana中测试ik分词器</p>
 <p>ik分词器中包含两个算法：ik_smart, ik_max_word</p>
 <p>ik_smart：最少划分</p>
 <p>ik_max_word: 为最细粒度划分！穷尽词库的可能！</p>
-<p><img src="/images/image-20210902164253248.png" alt="image-20210902164253248"></p>
-<p><img src="/images/image-20210902164343361.png" alt="image-20210902164343361"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160942.png" alt="image-20210902164253248"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160945.png" alt="image-20210902164343361"></p>
 <blockquote>
 <p>ik分词器的配置自己的词典</p>
 </blockquote>
 <p>在新创建.dic文件中添加自定义词组，并在配置文件中添加新创建的.dic文件</p>
-<p><img src="/images/image-20210902165031399.png"></p>
-<p><img src="/images/image-20210902165317096.png" alt="image-20210902165317096"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160950.png"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160951.png" alt="image-20210902165317096"></p>
 <h2 id="Rest风格说明"><a href="#Rest风格说明" class="headerlink" title="Rest风格说明"></a>Rest风格说明</h2><table>
 <thead>
 <tr>
@@ -526,9 +562,9 @@
 <h3 id="索引操作"><a href="#索引操作" class="headerlink" title="索引操作"></a>索引操作</h3><p>1、创建一个索引</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PUT /索引名/类型名/文档ID</span><br><span class="line">&#123;请求体&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/images/image-20210903132216983.png" alt="image-20210903132216983"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160955.png" alt="image-20210903132216983"></p>
 <p>完成了自动增加了索引！数据也成功添加了。</p>
-<p><img src="/images/image-20210903132317837.png" alt="image-20210903132317837"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160957.png" alt="image-20210903132317837"></p>
 <h4 id="字段类型"><a href="#字段类型" class="headerlink" title="字段类型"></a>字段类型</h4><table>
 <thead>
 <tr>
@@ -624,23 +660,23 @@
 </tr>
 </tbody></table>
 <p>指定字段类型</p>
-<p><img src="/images/image-20210903133332456.png" alt="image-20210903133332456"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-160959.png" alt="image-20210903133332456"></p>
 <p>获得规则</p>
 <p>通过get请求查看索引信息</p>
-<p><img src="/images/image-20210903135000448.png" alt="image-20210903135000448"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161002.png" alt="image-20210903135000448"></p>
 <p>查看默认信息</p>
-<p><img src="/images/image-20210903135411508.png" alt="image-20210903135411508"></p>
-<p><img src="/images/image-20210903135453262.png" alt="image-20210903135453262"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161004.png" alt="image-20210903135411508"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161006.png" alt="image-20210903135453262"></p>
 <p>如果自己的文档没有指定，那么es就会默认配置字段类型</p>
 <p>通过get _cat&#x2F;可以获得es的当前信息</p>
 <blockquote>
 <p>修改 </p>
 </blockquote>
 <p>使用PUT覆盖之前的值</p>
-<p><img src="/images/image-20210903140009417.png" alt="image-20210903140009417"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161007.png" alt="image-20210903140009417"></p>
 <p>使用POST修改</p>
-<p><img src="/images/image-20210903140212885.png" alt="image-20210903140212885"></p>
-<p><img src="/images/image-20210903140239903.png" alt="image-20210903140239903"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161010.png" alt="image-20210903140212885"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161012.png" alt="image-20210903140239903"></p>
 <blockquote>
 <p>删除</p>
 </blockquote>
@@ -668,7 +704,7 @@
 </blockquote>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET chen/_doc/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;chen&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/images/image-20210903182208742.png" alt="image-20210903182208742"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161015.png" alt="image-20210903182208742"></p>
 <p><strong>结果过滤，只查询name，desc字段</strong></p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET chen/_doc/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;query&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;chen&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;desc&quot;</span><span class="punctuation">]</span>   </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
@@ -689,11 +725,11 @@
 <p>should命令相当于or</p>
 <p>must_not相当于not</p>
 <h2 id="springboot集成ES"><a href="#springboot集成ES" class="headerlink" title="springboot集成ES"></a>springboot集成ES</h2><p>问题：</p>
-<p><img src="/images/image-20210903191113022.png" alt="image-20210903191113022"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161019.png" alt="image-20210903191113022"></p>
 <p>修改配置文件</p>
-<p><img src="/images/image-20210903191211977.png" alt="image-20210903191211977"></p>
-<p><img src="/images/image-20210903191223700.png" alt="image-20210903191223700"></p>
-<p><img src="/images/image-20210903191243417.png" alt="image-20210903191243417"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161021.png" alt="image-20210903191211977"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161023.png" alt="image-20210903191223700"></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-161027.png" alt="image-20210903191243417"></p>
 <p>修改成本地版本</p>
 <p>ElasticSearchClientConfig.java</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ElasticSearchClientConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RestHighLevelClient <span class="title function_">restHighLevelClient</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">RestHighLevelClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RestHighLevelClient</span>(</span><br><span class="line">                RestClient.builder(</span><br><span class="line">                        <span class="keyword">new</span> <span class="title class_">HttpHost</span>(<span class="string">&quot;localhost&quot;</span>, <span class="number">9200</span>, <span class="string">&quot;http&quot;</span>)</span><br><span class="line">                )</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">return</span> client;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -753,7 +789,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://yichenfirst.github.io/2023/03/09/ElasticSearch/" title="ElasticSearch概述" target="_blank" rel="external">https://yichenfirst.github.io/2023/03/09/ElasticSearch/</a>
+      <a href="https://yichenfirst.github.io/2021/09/02/ElasticSearch/" title="ElasticSearch概述" target="_blank" rel="external">https://yichenfirst.github.io/2021/09/02/ElasticSearch/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -767,12 +803,12 @@
   <div class="panel-body">
     <figure class="media">
       <div class="media-left">
-        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
           <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
         </a>
       </div>
       <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">逸辰</span><small class="ml-1x">后端开发</small></a></h3>
         <div>个人简介。</div>
       </div>
     </figure>
@@ -799,9 +835,13 @@
   
   <ul class="pager pull-left">
     
+    <li class="prev">
+      <a href="/2021/09/11/%E5%89%8D%E7%AB%AF/vue%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%B7%AF%E7%94%B1/" title="vue组件与路由"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
     
     <li class="next">
-      <a href="/2023/03/09/hello-world/" title="Hello World"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2021/08/31/%E5%89%8D%E7%AB%AF/vue%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" title="Vue安装教程"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
@@ -816,8 +856,6 @@
   
   
   <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
     
   </div>
   </div>
@@ -871,23 +909,10 @@
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
 	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
     <div class="copyright">
     	
+        &copy; 2023 逸辰
+        
         <div class="publishby">
         	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
         </div>
@@ -929,6 +954,8 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
    
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
 
 
 
