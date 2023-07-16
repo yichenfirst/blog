@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>redis高可用机制 | 逸辰</title>
+  <meta name="description" content="高可用主从复制主从复制，是指将一台Redis服务器的数据复制到其他的Redis服务器。前者称为主节点（master），后者称为从节点（slave）。且数据的复制是单向的，只能由主节点到从节点。Redis主从复制支持主从同步和从从同步两种，后者是Redis后续版本新增的功能，以减轻主节点的同步负担。    主从复制的作用   数据冗余：主从复制实现的数据的热备份，是持久化之外的一种数据冗余方式。 故">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis高可用机制">
+<meta property="og:url" content="https://yichenfirst.github.io/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="逸辰">
+<meta property="og:description" content="高可用主从复制主从复制，是指将一台Redis服务器的数据复制到其他的Redis服务器。前者称为主节点（master），后者称为从节点（slave）。且数据的复制是单向的，只能由主节点到从节点。Redis主从复制支持主从同步和从从同步两种，后者是Redis后续版本新增的功能，以减轻主节点的同步负担。    主从复制的作用   数据冗余：主从复制实现的数据的热备份，是持久化之外的一种数据冗余方式。 故">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180232.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180230.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180227.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180225.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180222.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180220.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180217.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180215.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180212.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190420.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190425.jpg">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190502.jpg">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190429.jpg">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190433.jpg">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190439.png">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190443.png">
+<meta property="article:published_time" content="2023-03-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-16T11:05:04.196Z">
+<meta property="article:author" content="逸辰">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180232.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://yichenfirst.github.io/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="逸辰" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">逸辰</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">后端开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 长春，中国</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aop/" rel="tag">aop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsecurity/" rel="tag">springsecurity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/token/" rel="tag">token</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/aop/" style="font-size: 13px;">aop</a> <a href="/tags/docker/" style="font-size: 13px;">docker</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/mybatis/" style="font-size: 13px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/redis/" style="font-size: 13.67px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/springcloud/" style="font-size: 13px;">springcloud</a> <a href="/tags/springsecurity/" style="font-size: 13px;">springsecurity</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/token/" style="font-size: 13px;">token</a> <a href="/tags/vue/" style="font-size: 13.33px;">vue</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 13px;">操作系统</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/04/01/redis/redis%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" class="title">redis通信协议</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-31T16:00:00.000Z" itemprop="datePublished">2023-04-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/25/redis/redis%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" class="title">redis内存回收</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-24T16:00:00.000Z" itemprop="datePublished">2023-03-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/20/redis/redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="title">redis底层数据结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-19T16:00:00.000Z" itemprop="datePublished">2023-03-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/" class="title">redis高可用机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-17T16:00:00.000Z" itemprop="datePublished">2023-03-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/16/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="title">redis持久化机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-15T16:00:00.000Z" itemprop="datePublished">2023-03-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-redis/redis高可用机制" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      redis高可用机制
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/" class="article-date">
+	  <time datetime="2023-03-17T16:00:00.000Z" itemprop="datePublished">2023-03-18</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/redis/" rel="tag">redis</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 9(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h2><h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><p>主从复制，是指将一台Redis服务器的数据复制到其他的Redis服务器。前者称为主节点（master），后者称为从节点（slave）。且数据的复制是单向的，只能由主节点到从节点。Redis主从复制支持<strong>主从同步</strong>和<strong>从从同步</strong>两种，后者是Redis后续版本新增的功能，以减轻主节点的同步负担。</p>
+<blockquote>
+<p>  主从复制的作用</p>
+</blockquote>
+<ul>
+<li><strong>数据冗余</strong>：主从复制实现的数据的热备份，是持久化之外的一种数据冗余方式。</li>
+<li><strong>故障恢复</strong>： 当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复（服务的冗余）</li>
+<li><strong>负载均衡</strong>： 在主从复制的基础上配合读写分离，可以由主节点提供写服务，由从节点提供读服务，分担服务器负载。尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高Redis服务器的并发量。</li>
+<li><strong>高可用基石</strong>：除上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis高可用的基础。</li>
+</ul>
+<h3 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h3><p>Redis主从复制的工作流程如下：</p>
+<ul>
+<li>保存主节点信息，主要是主节点的ip和port</li>
+<li>主节点与从节点建立连接，从节点发现主节点后会尝试与主节点建立网络连接</li>
+<li>发送ping命令，连接建立成功后从节点发送ping请求首次通信，主要是检测主从之间网络套接字是否可用，主节点当前是否可以接受处理命令</li>
+<li>权限验证，如果主节点要求密码验证，从节点必须正确的密码才能通过验证</li>
+<li>同步数据，主从复制连接正常通信后，主节点会把持有的数据全部发送给从节点</li>
+<li>命令持续复制，接下来主节点会持续地把写命令发送给从节点，保证主从数据的一致性</li>
+</ul>
+<h3 id="主从数据同步方式"><a href="#主从数据同步方式" class="headerlink" title="主从数据同步方式"></a>主从数据同步方式</h3><h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h4><p>主从第一次建立连接时，会执行全量同步，将maser节点的所有数据都拷贝给slave节点，流程如下：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180232.png" alt="image-20210725152222497"></p>
+<p>那master是如何得知slave是第一次连接呢？</p>
+<p>通过<strong>Replication Id</strong>和<strong>offset</strong>字段来判断。</p>
+<ul>
+<li><strong>Replication Id：</strong> 简称replid，是数据集的标记，id一致说明是同一个数据集。每一个master都有一个唯一的replid，slave则会继承master节点的replid</li>
+<li><strong>offset</strong>：偏移量，随着记录在repl_baklog中的数据增多而逐渐增大。slave完成同步时也会记录当前同步的offset。如果slave的offset小于master的offset，说明slave数据落后于master，需要更新。</li>
+</ul>
+<p>因此slave做数据同步，必须想master声明自己的replication id和offset，master才可以判断到底需要同步哪些数据。</p>
+<p>因为slave原本也是一个master，有自己的replid和offset，当第一次变成slave，与master简历连接时，发送的replid和offset是自己的replid和offset。master判断发现slave发送过来的replid与自己的不一致，说明这是一个全新的slave，就知道要做全量同步。</p>
+<p>master会将自己replid和offset都发送给这个slave，slave保存这些信息。以后slave的replid就与master一致了。</p>
+<p><strong>因此，master判断一个节点是否是第一次同步的依据就是看replid是否一致。</strong>如图：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180230.png" alt="image-20210725152700914"></p>
+<p>完整流程：</p>
+<ul>
+<li>slave节点请求增量同步，发送自己的replid和offset</li>
+<li>master节点判断replid，发现不一致，拒绝则增量同步</li>
+<li>master将自己的replid和offset发送给slave</li>
+<li>slave保存master发送过来的replid和offset</li>
+<li>master将完整的内存数据生成RDB文件，发送RDB到slave</li>
+<li>slave清空本地数据，加载master的RDB</li>
+<li>master将RDB期间的命令记录在repl_baklog，并持续将log的命令发送给slave</li>
+<li>slave执行接受到的命令，保持与master之间的同步</li>
+</ul>
+<h4 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h4><p>全量同步需要生成RDB文件，然后将RDB文件通过网络传输给各个slave，成本比较高。因此除了第一次做全量同步，其他大多数时候slave与master都是做增量同步，只更新slave与master存在差异的部分数据，如图：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180227.png" alt="image-20210725153201086"></p>
+<p>那么master怎么知道slave与自己的数据差异在哪里呢？</p>
+<p>通过全量同步时的repl_baklog文件。</p>
+<p>这个文件是一个固定大小的数组，只不过数组是环形，也就是说角<strong>标到达末尾后，会再次从0开始读写</strong>，这样数组头部的数据就会被覆盖。repl_baklog中会记录Redis处理过的命令日志和offset，包括master当前的offset，和slave已经拷贝到的offset。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180225.png" alt="image-20210725153359022"></p>
+<p>slave与master的offset之间的差异，就是slave需要增量拷贝的数据了。</p>
+<p>随着不断有数据写入，master的offset逐渐变大，slave也不断的拷贝，追赶master的offset：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180222.png" alt="image-20210725153524190"></p>
+<p>直到数组被填满：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180220.png" alt="image-20210725153715910"></p>
+<p>此时如果有新的数组写入，就会覆盖数组中的旧数据。不过旧的数据只要是绿色的，说明是已经被同步到slave的数据，即便被覆盖了也没什么影响。因为未同步的仅仅是红色的部分。</p>
+<p>但是，如果slave网络出现阻塞导致master的offset远远超过了slave的offset</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180217.png" alt="image-20210725153937031"></p>
+<p>如果过master继续写入新数据，其offset就会覆盖旧的数据，知道将slave现在的offset也覆盖：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180215.png" alt="image-20210725154155984"></p>
+<p>棕色框中的红色部分，就是尚未同步，但是已经被覆盖了的数据。如果此时slave恢复，需要同步，发现自己的offset没有了，就无法完成增量同步，只能做全量同步。</p>
+<h4 id="主从同步优化"><a href="#主从同步优化" class="headerlink" title="主从同步优化"></a>主从同步优化</h4><ul>
+<li>在master中配置repl-diskless-sync yes启动无磁盘复制，避免全量同步时的磁盘IO</li>
+<li>Redis单节点上的内存不要太大，减少RDB导致过多的磁盘IO</li>
+<li>适当提高repl-baklog的大小，发现slave宕机尽快实现故障恢复，尽可能避免全量同步</li>
+<li>限制一个master上的slave节点数量，如果实现是太多的slave，则可以采用主-从-从链式结构，减少master压力</li>
+</ul>
+<p>主从从架构图</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-180212.png" alt="image-20210725154405899"></p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><strong>问：全量同步和增量同步的区别？</strong></p>
+<p><strong>答：</strong></p>
+<ul>
+<li>全量同步: master将完整的内存数据库生成RDB，发送RDB到slave。后续命令则记录在repl_baklog，逐个发送给slave</li>
+<li>增量同步：slave提交自己的offset到master，master获取从repl_baklog中从offset之后的命令给slave</li>
+</ul>
+<p><strong>问：什么时候执行全量同步？</strong></p>
+<p><strong>答：</strong></p>
+<ul>
+<li>slave节点第一次连接master节点时</li>
+<li>slave节点断开时间太久，repl_baklog中的offset已经被覆盖</li>
+</ul>
+<p><strong>问：什么时候执行增量同步？</strong></p>
+<p>**答:**slave节点断开又恢复，并且repl_baklog中能找到offset时</p>
+<h3 id="哨兵机制"><a href="#哨兵机制" class="headerlink" title="哨兵机制"></a>哨兵机制</h3><h4 id="哨兵实现了什么功能？"><a href="#哨兵实现了什么功能？" class="headerlink" title="哨兵实现了什么功能？"></a>哨兵实现了什么功能？</h4><p>下图是一个经典的哨兵集群监控的逻辑图：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190420.png" alt="db-redis-sen-1"></p>
+<ul>
+<li><strong>监控</strong>： 哨兵会不断地检查主节点和从节点是否运作正常</li>
+<li><strong>自动故障转义</strong>： 当主节点不能正常工作时，哨兵会开始自动故障转义操作，它会将失效主节点的其中一个节点升级为新的主节点，并让其他从节点改为复制新的主节点</li>
+<li><strong>配置提供者</strong>： 客户端在初始化时，通过连接哨兵来获得当前Redis服务的主节点地址</li>
+<li><strong>通知</strong>： 哨兵可以将故障转移的结果发送给客户端</li>
+</ul>
+<h4 id="哨兵集群是通过什么方式组建的？"><a href="#哨兵集群是通过什么方式组建的？" class="headerlink" title="哨兵集群是通过什么方式组建的？"></a>哨兵集群是通过什么方式组建的？</h4><p>哨兵实例之前可以相互发现，要归功于Redis提供的pub&#x2F;sub机制，也就是发布&#x2F;订阅机制。</p>
+<p>在主从集群中，主库上有一个名为<code>__sentinel_:hello</code>的频道，不同哨兵就是通过它来相互发现，实现通信的。在下图中，哨兵1将自己的IP（172.16.19.3）和端口（26579）发布到<code>__sentinel__hello:</code>频道上，哨兵2和3订阅了该频道。那么此时，哨兵2和3就可以从这个频道直接获取哨兵1的IP和端口号。然后然后2、3就可以和哨兵1建立网络连接。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190425.jpg" alt="db-redis-sen-6"></p>
+<p>通过这个机制，哨兵2和3也可以建立网络连接，这样一来，哨兵集群就形成了。它们相互间可以通过网络连接进行通信，比如说对主库有没有下线这件事进行协商。</p>
+<h4 id="哨兵是如何监控redis集群的？"><a href="#哨兵是如何监控redis集群的？" class="headerlink" title="哨兵是如何监控redis集群的？"></a>哨兵是如何监控redis集群的？</h4><p>这是又哨兵向主库发送INFO命令来完成的。如下图，哨兵2给主库发送INFO命令，主库接受这个命令后，就会发从库列表返回给哨兵。接着哨兵就可以根据从库列表中的连接信息，和每个从库建立连接，并在这个连接上持续地对从库进行监控。哨兵1和哨兵3可以通过相同的方式和从库建立连接。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190502.jpg" alt="img"></p>
+<h4 id="哨兵如何判断主库已经下线了？"><a href="#哨兵如何判断主库已经下线了？" class="headerlink" title="哨兵如何判断主库已经下线了？"></a>哨兵如何判断主库已经下线了？</h4><p>首先要理解两个概念：主观下线和客观下线</p>
+<ul>
+<li><strong>主观下线：</strong>任何一个哨兵都可以监控探测，并做出Redis节点下线的判断</li>
+<li><strong>客观下线：</strong>由哨兵集群共同决定Redis节点是否下线</li>
+</ul>
+<p>当某个哨兵判断主库主观下线后，就会给其他哨兵发送<code>is-master-down-by-addr</code>命令。接着，其他哨兵会根据自己和主库的连接情况，做出Y或N的响应，Y相当于赞成票，N相当于反对票。</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190429.jpg" alt="img"></p>
+<p>如果赞成票大于等于哨兵配置文件中的<code>quorum</code>配置项，则可以判断主库客观下线了。</p>
+<h4 id="哨兵的选举机制"><a href="#哨兵的选举机制" class="headerlink" title="哨兵的选举机制"></a>哨兵的选举机制</h4><ul>
+<li><strong>为什么必然会出现选举&#x2F;共识机制</strong>？</li>
+</ul>
+<p>为了避免哨兵的单点情况发生，所以需要一个哨兵的分布式集群。作为分布式集群，必然涉及共识问题（即选举问题）；同时故障的转移和通知都只需要一个主的哨兵节点就可以了。</p>
+<ul>
+<li><strong>哨兵的选举机制是什么样的</strong>？</li>
+</ul>
+<p>哨兵的选举机制其实很简单，就是一个Raft选举算法： 选举的票数大于等于num(sentinels)&#x2F;2+1时，将成为领导者，如果没有超过，继续选举</p>
+<ul>
+<li><strong>任何一个想成为 Leader 的哨兵，要满足两个条件</strong>：<ul>
+<li>第一，拿到半数以上的赞成票；</li>
+<li>第二，拿到的票数同时还需要大于等于哨兵配置文件中的 quorum 值。</li>
+</ul>
+</li>
+</ul>
+<h4 id="主库判定客观下线了，那么如何从剩余的从库中选择一个新的主库？"><a href="#主库判定客观下线了，那么如何从剩余的从库中选择一个新的主库？" class="headerlink" title="主库判定客观下线了，那么如何从剩余的从库中选择一个新的主库？"></a>主库判定客观下线了，那么如何从剩余的从库中选择一个新的主库？</h4><ul>
+<li>过滤掉不健康的（下线或断线），没有回复过哨兵ping响应的从节点</li>
+<li>选择<code>slave-priority</code>从节点优先级最高的</li>
+<li>选择复制偏移量最大的，支付至最完整的从节点</li>
+<li>选择run id最小的</li>
+</ul>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190433.jpg" alt="img"></p>
+<h4 id="新的主库选择出来后如何进行故障转移？"><a href="#新的主库选择出来后如何进行故障转移？" class="headerlink" title="新的主库选择出来后如何进行故障转移？"></a>新的主库选择出来后如何进行故障转移？</h4><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190439.png" alt="img"></p>
+<ul>
+<li>将slave-1脱离原从节点，升级为主节点</li>
+<li>将从节点slave-2指向新的主节点</li>
+<li>通知客户端主节点已更换</li>
+<li>将原主节点变成从节点，指向新的主节点</li>
+</ul>
+<p><strong>转移之后</strong></p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/16/20230716-190443.png" alt="img"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://yichenfirst.github.io/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/" title="redis高可用机制" target="_blank" rel="external">https://yichenfirst.github.io/2023/03/18/redis/redis高可用机制/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">逸辰</span><small class="ml-1x">后端开发</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2023/03/20/redis/redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="redis底层数据结构"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2023/03/16/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" title="redis持久化机制"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        &copy; 2023 逸辰
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
