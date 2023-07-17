@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>mysql事务 | 逸辰</title>
+  <meta name="description" content="简述数据库中的 ACID 分别是什么？原子性：每个事务都是不可分割的最小工作单元，事务中的所有操作要么全成功，要么全失败。使用undo log实现回滚。 隔离性：各个事务之间相互隔离，互不干扰。通过锁和MVCC实现隔离 持久性：事务一旦提交，数据会永久的存储在数据库中。使用redo log实现故障恢复。 一致性：比如A向B转账，A减少1000，B就得增加1000，两人的余额总和不能变。一致性通过原">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql事务">
+<meta property="og:url" content="https://yichenfirst.github.io/2022/08/15/mysql/mysql%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="逸辰">
+<meta property="og:description" content="简述数据库中的 ACID 分别是什么？原子性：每个事务都是不可分割的最小工作单元，事务中的所有操作要么全成功，要么全失败。使用undo log实现回滚。 隔离性：各个事务之间相互隔离，互不干扰。通过锁和MVCC实现隔离 持久性：事务一旦提交，数据会永久的存储在数据库中。使用redo log实现故障恢复。 一致性：比如A向B转账，A减少1000，B就得增加1000，两人的余额总和不能变。一致性通过原">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/17/20230717-212024.png">
+<meta property="article:published_time" content="2022-08-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-17T13:41:27.724Z">
+<meta property="article:author" content="逸辰">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="总结">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/17/20230717-212024.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://yichenfirst.github.io/2022/08/15/mysql/mysql%E4%BA%8B%E5%8A%A1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="逸辰" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">逸辰</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">后端开发</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> 长春，中国</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aop/" rel="tag">aop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsecurity/" rel="tag">springsecurity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/token/" rel="tag">token</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BB%93/" rel="tag">总结</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/aop/" style="font-size: 13px;">aop</a> <a href="/tags/docker/" style="font-size: 13px;">docker</a> <a href="/tags/java/" style="font-size: 13.25px;">java</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/mybatis/" style="font-size: 13px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.5px;">mysql</a> <a href="/tags/redis/" style="font-size: 13.75px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/springcloud/" style="font-size: 13px;">springcloud</a> <a href="/tags/springsecurity/" style="font-size: 13px;">springsecurity</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/token/" style="font-size: 13px;">token</a> <a href="/tags/vue/" style="font-size: 13.5px;">vue</a> <a href="/tags/%E6%80%BB%E7%BB%93/" style="font-size: 13.25px;">总结</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 13px;">操作系统</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 13px;">面试</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">二月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/04/01/redis/redis%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" class="title">redis通信协议</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-31T16:00:00.000Z" itemprop="datePublished">2023-04-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/25/redis/redis%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" class="title">redis内存回收</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-24T16:00:00.000Z" itemprop="datePublished">2023-03-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/20/redis/redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="title">redis底层数据结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-19T16:00:00.000Z" itemprop="datePublished">2023-03-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/18/redis/redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9C%BA%E5%88%B6/" class="title">redis高可用机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-17T16:00:00.000Z" itemprop="datePublished">2023-03-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/redis/">redis</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/03/16/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="title">redis持久化机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-03-15T16:00:00.000Z" itemprop="datePublished">2023-03-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-mysql/mysql事务" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mysql事务
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/08/15/mysql/mysql%E4%BA%8B%E5%8A%A1/" class="article-date">
+	  <time datetime="2022-08-14T16:00:00.000Z" itemprop="datePublished">2022-08-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/mysql/" rel="tag">mysql</a>, <a class="article-tag-link-link" href="/tags/%E6%80%BB%E7%BB%93/" rel="tag">总结</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/08/15/mysql/mysql%E4%BA%8B%E5%8A%A1/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 10(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="简述数据库中的-ACID-分别是什么？"><a href="#简述数据库中的-ACID-分别是什么？" class="headerlink" title="简述数据库中的 ACID 分别是什么？"></a>简述数据库中的 ACID 分别是什么？</h2><p>原子性：每个事务都是不可分割的最小工作单元，事务中的所有操作要么全成功，要么全失败。使用undo log实现回滚。</p>
+<p>隔离性：各个事务之间相互隔离，互不干扰。通过锁和MVCC实现隔离</p>
+<p>持久性：事务一旦提交，数据会永久的存储在数据库中。使用redo log实现故障恢复。</p>
+<p>一致性：比如A向B转账，A减少1000，B就得增加1000，两人的余额总和不能变。一致性通过原子性+隔离性+持久性来保证。</p>
+<h2 id="数据库的事务隔离级别有哪些？各有哪些优缺点？"><a href="#数据库的事务隔离级别有哪些？各有哪些优缺点？" class="headerlink" title="数据库的事务隔离级别有哪些？各有哪些优缺点？"></a>数据库的事务隔离级别有哪些？各有哪些优缺点？</h2><blockquote>
+<p>  事务隔离级别要解决的问题（事务并行导致的问题）</p>
+</blockquote>
+<p><strong>脏读</strong></p>
+<p>脏读指的是读到了其他事务未提交的数据，未提交意味着这些数据可能会回滚，也就是可能最终不会存到数据库中，也就是不存在的数据。读到了并一定最终存在的数据，这就是脏读。</p>
+<p><strong>不可重复读</strong></p>
+<p>对比可重复读，不可重复读指的是在同一事务内，不同的时刻读到的同一批数据可能是不一样的，可能会受到其他事务的影响，比如其他事务改了这批数据并提交了。通常针对数据<strong>更新（UPDATE）</strong>操作。</p>
+<p><strong>幻读</strong></p>
+<p>幻读是针对数据<strong>插入（INSERT）</strong>操作来说的。假设事务A对某些行的内容作了更改，但是还未提交，此时事务B插入了与事务A更改前的记录相同的记录行，并且在事务A提交之前先提交了，而这时，在事务A中查询，会发现好像刚刚的更改对于某些数据未起作用，但其实是事务B刚插入进来的，让用户感觉很魔幻，感觉出现了幻觉，这就叫幻读。</p>
+<blockquote>
+<p>  事务的隔离级别</p>
+</blockquote>
+<ul>
+<li><p>读未提交（READ UNCOMMITTED）</p>
+</li>
+<li><p>读已提交 （READ COMMITTED）</p>
+</li>
+<li><p>可重复读 （REPEATABLE READ）</p>
+</li>
+<li><p>串行化 （SERIALIZABLE）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复度</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>读已提交</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>可重复读</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>串行化</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+</tr>
+</tbody></table>
+<h2 id="简述-MySQL-MVCC-的实现原理"><a href="#简述-MySQL-MVCC-的实现原理" class="headerlink" title="简述 MySQL MVCC 的实现原理"></a>简述 MySQL MVCC 的实现原理</h2><p>MVCC的目的就是多版本并发控制，在数据库中的实现，就是为了解决<code>读写冲突</code>，它的实现原理主要是依赖记录中的 <code>3个隐式字段</code>，<code>undo log</code> ，<code>Read View</code> 来实现的</p>
+<p><strong>1、隐式字段</strong></p>
+<p>　每行记录除了我们自定义的字段外，还有数据库隐式定义的<code>DB_TRX_ID</code>,<code>DB_ROLL_PTR</code>,<code>DB_ROW_ID</code>等字段</p>
+<ul>
+<li><code>DB_TRX_ID</code><br>  6byte，最近修改(<code>修改/插入</code>)事务ID：记录创建这条记录/最后一次修改该记录的事务ID</li>
+<li><code>DB_ROLL_PTR</code><br>  7byte，回滚指针，指向这条记录的上一个版本（存储于rollback segment里）</li>
+<li><code>DB_ROW_ID</code><br>  6byte，隐含的自增ID（隐藏主键），如果数据表没有主键，InnoDB会自动以<code>DB_ROW_ID</code>产生一个聚簇索引</li>
+</ul>
+<p><strong>2、undo日志</strong></p>
+<p>undo log主要分为两种：</p>
+<ul>
+<li><p>insert undo log<br>  代表事务在<code>insert</code>新记录时产生的<code>undo log</code>, 只在事务回滚时需要，并且在事务提交后可以被立即丢弃</p>
+</li>
+<li><p>update undo log<br>  事务在进行<code>update</code>或<code>delete</code>时产生的<code>undo log</code>; 不仅在事务回滚时需要，在快照读时也需要；所以不能随便删除，只有在快速读或事务回滚不涉及该日志时，对应的日志才会被<code>purge</code>线程统一清除</p>
+</li>
+</ul>
+<p>不同事务或者相同事务的对同一记录的修改，会导致该记录的<code>undo log</code>成为一条记录版本线性表，既链表，<code>undo log</code>的链首就是最新的旧记录，链尾就是最早的旧记录</p>
+<p><strong>3、read view</strong></p>
+<p>说白了Read View就是事务进行<code>快照读</code>操作的时候生产的<code>读视图</code>，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个快照，记录并维护系统当前活跃事务的ID(当每个事务开启时，都会被分配一个ID, 这个ID是递增的，所以最新的事务，ID值越大)</p>
+<p>所以我们知道 <code>Read View</code>主要是用来做可见性判断的, 即当我们某个事务执行快照读的时候，对该记录创建一个<code>Read View</code>读视图，把它比作条件用来判断当前事务能够看到哪个版本的数据，既可能是当前最新的数据，也有可能是该行记录的<code>undo log</code>里面的某个版本的数据。</p>
+<p>我们可以把Read View简单的理解成有三个全局属性</p>
+<ul>
+<li><p><code>trx_ids　　</code>系统当前正在活跃的事务ID集合</p>
+</li>
+<li><p><code>up_limit_id　　</code>活跃的事务中最小的事务 ID</p>
+</li>
+<li><p><code>low_limit_id　　</code>ReadView生成时刻系统尚未分配的下一个事务ID，也就是<code>目前已出现过的事务ID的最大值+1</code></p>
+</li>
+<li><p><code>creator_trx_id</code>　　创建这个 ReadView 的事务ID。</p>
+</li>
+</ul>
+<p>如果当前事务的 creator_trx_id 想要读取某个行记录，这个行记录ID 的 DB_TRX_ID，这样会有以下的情况：</p>
+<ol>
+<li>如果 <code>trx_id &lt; 活跃的最小事务ID（up_limit_id）</code>,也就是说这个行记录在这些活跃的事务创建前就已经提交了，那么这个行记录对当前事务是可见的。</li>
+<li>如果<code>trx_id &gt;= low_limit_id</code>，这个说明行记录在这些活跃的事务之后才创建，说明这个行记录对当前事务是不可见的。</li>
+<li>如果 <code>up_limit_id &lt;= trx_id &lt; low_limit_id</code>,说明该记录需要在 <code>trx_ids </code>集合中，可能还处于活跃状态，因此我们需要在 <code>trx_ids</code> 集合中遍历 ，如果<code>trx_id</code> 存在于 <code>trx_ids</code> 集合中，证明这个事务<code>trx_id</code>还处于活跃状态，不可见，否则 ，<code>trx_id</code> 不存在于 <code>trx_ids </code>集合中，说明事务<code>trx_id</code> 已经提交了，这行记录是可见的。</li>
+</ol>
+<p>【总之就是修改当前行的事务提交了，数据才能被查看】</p>
+<h2 id="MySQL中是如何实现事务隔离的"><a href="#MySQL中是如何实现事务隔离的" class="headerlink" title="MySQL中是如何实现事务隔离的"></a>MySQL中是如何实现事务隔离的</h2><h3 id="读未提交"><a href="#读未提交" class="headerlink" title="读未提交"></a>读未提交</h3><p>它性能最好，直接读取最新的数据就行。</p>
+<h3 id="串行化"><a href="#串行化" class="headerlink" title="串行化"></a><strong>串行化</strong></h3><p>读的时候加共享锁，也就是其他事务可以并发读，但是不能写。写的时候加排它锁，其他事务不能并发写也不能并发读。</p>
+<h3 id="读已提交"><a href="#读已提交" class="headerlink" title="读已提交"></a><strong>读已提交</strong></h3><p>通过MVCC的read view实现，每个查询执行前都会重新生成一个read view。</p>
+<p>「读已提交」隔离级别是在每个 select 都会生成一个新的 Read View，也意味着，事务期间的多次读取同一条数据，前后两次读的数据可能会出现不一致，因为可能这期间另外一个事务修改了该记录，并提交了事务</p>
+<h3 id="可重复读"><a href="#可重复读" class="headerlink" title="可重复读"></a><strong>可重复读</strong></h3><p>通过MVCC的read view实现，一个事务只有第一次查询才会生成一个read view。</p>
+<p>「可重复读」隔离级别是启动事务时生成一个 Read View，然后整个事务期间都在用这个 Read View，这样就保证了在事务期间读到的数据都是事务启动前的记录。</p>
+<h2 id="什么是数据库事务，MySQL-为什么会使用-InnoDB-作为默认选项"><a href="#什么是数据库事务，MySQL-为什么会使用-InnoDB-作为默认选项" class="headerlink" title="什么是数据库事务，MySQL 为什么会使用 InnoDB 作为默认选项"></a>什么是数据库事务，MySQL 为什么会使用 InnoDB 作为默认选项</h2><blockquote>
+<p>  数据库事务</p>
+</blockquote>
+<p>数据库事务是访问并可能操作各种数据项的一个数据库操作序列，这些操作要么全部执行，要么全部不执行，是一个不可分割的工作单位。</p>
+<blockquote>
+<p>  MySQL 为什么会使用 InnoDB 作为默认选项</p>
+</blockquote>
+<ul>
+<li>InnoDB可靠性比较高，支持事务</li>
+<li>InnoDB支持表锁和行锁，MyISAM只支持表级锁。</li>
+<li>InnoDB支持外键</li>
+</ul>
+<h2 id="快照读与当前读"><a href="#快照读与当前读" class="headerlink" title="快照读与当前读"></a>快照读与当前读</h2><ul>
+<li>快照读：其实是基于MVCC+undo log实现的，读取的MVCC快照链路中的某个版本，很可能是历史版本，不用加锁。</li>
+<li>当前读：读取的是记录的最新版本，并且返回的数据记录会加上锁，保证其他事务不能并发的修改数据记录。</li>
+</ul>
+<blockquote>
+<p> 当前读</p>
+</blockquote>
+<p>当前读的场景：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> .... (更新操作)</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> .... (删除操作)</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> .... (插入操作)</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> .... lock <span class="keyword">in</span> share mode (共享读锁)</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> .... <span class="keyword">for</span> update. (写锁)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当前读，读取的诗最新版本，并且对读取的记录加锁，阻塞其他事务同时修改相同记录，避免出现安全问题。</p>
+<p>例如：假设要update一条记录，但是另一个事务已经delete这条数据并且commit了，如果不加锁就会产生冲突。所以update的时候肯定要是当前读，得到最新的信息并且锁定相应的记录。</p>
+<blockquote>
+<p> 快照读</p>
+</blockquote>
+<p>快照读的场景：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> .... (普通<span class="keyword">select</span>操作，不包括当前读的lock <span class="keyword">in</span> share mode和<span class="keyword">for</span> <span class="keyword">update</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Read Committed隔离级别：每次select都会生成一个快照读</p>
+<p>Read Repeatable隔离级别：开启事务后第一个select语句才是快照读，而不是一开始事务就是快照读。</p>
+<h2 id="InnoDB是如何避免幻读的"><a href="#InnoDB是如何避免幻读的" class="headerlink" title="InnoDB是如何避免幻读的"></a>InnoDB是如何避免幻读的</h2><ul>
+<li>针对<strong>快照读</strong>（普通select语句），是通过MVCC方式解决了幻读，因为可重复读隔离级别下，事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，即使中途有其他事务插入了一条数据，是查不出来这条数据的，所以就很好的避免了幻读问题。</li>
+<li>针对<strong>当前读</strong>（select … for update等语句），是通过next-key lock（临键锁，即记录锁+间隙锁）方式解决了幻读，因为当执行select … for update语句的时候，会加上next-key lock，如果有其他事务在next-key锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法插入成功，所以很好避免了幻读问题。</li>
+</ul>
+<h2 id="可重复读隔离级别完全解决幻读了吗"><a href="#可重复读隔离级别完全解决幻读了吗" class="headerlink" title="可重复读隔离级别完全解决幻读了吗"></a>可重复读隔离级别完全解决幻读了吗</h2><p>没有，</p>
+<blockquote>
+<p>第一个发生幻读现象的场景</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>小红</td>
+<td>50</td>
+</tr>
+<tr>
+<td>2</td>
+<td>小明</td>
+<td>60</td>
+</tr>
+<tr>
+<td>3</td>
+<td>小林</td>
+<td>70</td>
+</tr>
+<tr>
+<td>4</td>
+<td>小蓝</td>
+<td>80</td>
+</tr>
+</tbody></table>
+<p>事务A执行查询id=5的记录，此时表中是没有记录的，所以查不出来</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> stu <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line">(此时事务B开始执行)</span><br><span class="line"><span class="keyword">update</span> stu <span class="keyword">set</span> name <span class="operator">=</span> "xiaozhang" <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> stu <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">5</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后事务B插入一条id=5的记录，并提交了事务。</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span>;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> stu <span class="keyword">values</span>(<span class="number">5</span>, <span class="string">'小美'</span>, <span class="number">18</span>);</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此时，事务A更新id=5这条记录，然后再次查询id=5的记录，事务A就能看到事务B插入的记录了，幻读就是发生在这种违和的场景。</p>
+<p>时序图如下：</p>
+<p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/07/17/20230717-212024.png" alt="幻读发生"></p>
+<p>在可重复读隔离级别下，事务A第一次执行普通的select语句时生成一个read view， 之后事务B向表中插入了一条id=5的记录并提交。接着，事务A对id=5这条记录进行了更新操作，在这个时候，这条新记录的trx_id的值就变成了事务A的事务id，之后事务A在使用普通select语句去查询这条记录时就可以看到这条记录了，于是就发生了幻读。</p>
+<blockquote>
+<p>第二个发生幻读的场景</p>
+</blockquote>
+<ul>
+<li>T1时刻：事务A先执行「快照读语句」：select * from user where id &gt; 100得到3条记录</li>
+<li>T2时刻：事务B插入一个id=200的记录并提交</li>
+<li>T3时刻：事务A再执行「当前读语句」select * from test where id &gt; 100 for update就会得到4条记录，此时也发生了幻读现象。</li>
+</ul>
+<p>要避免这特殊场景下发生幻读的现象，就是尽量在开启事务之后，马上执行select … for update这类当前读的语句，因为它会对记录加next-key lock，从而避免其他事务插入一条新记录。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://yichenfirst.github.io/2022/08/15/mysql/mysql%E4%BA%8B%E5%8A%A1/" title="mysql事务" target="_blank" rel="external">https://yichenfirst.github.io/2022/08/15/mysql/mysql事务/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">逸辰</span><small class="ml-1x">后端开发</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/08/21/%E9%9D%A2%E8%AF%95/mysql%E6%80%BB%E7%BB%93/" title="mysql总结"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/06/04/mysql/count%E5%87%BD%E6%95%B0%E6%95%88%E7%8E%87/" title="count(*)、count(1)、count(主键)、count(列字段)效率比较"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        &copy; 2023 逸辰
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
