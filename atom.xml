@@ -6,7 +6,7 @@
   <link href="https://yichenfirst.github.io/atom.xml" rel="self"/>
   
   <link href="https://yichenfirst.github.io/"/>
-  <updated>2023-09-01T08:55:45.198Z</updated>
+  <updated>2023-09-01T08:55:53.143Z</updated>
   <id>https://yichenfirst.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://yichenfirst.github.io/2023/09/01/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/"/>
     <id>https://yichenfirst.github.io/2023/09/01/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</id>
     <published>2023-09-01T08:53:49.259Z</published>
-    <updated>2023-09-01T08:55:45.198Z</updated>
+    <updated>2023-09-01T08:55:53.143Z</updated>
     
     <content type="html"><![CDATA[<h1 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h1><p>分布式事务是解决在分布式系统中事务的一致性问题。</p><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>在一个电商系统中，订单模块和库存模块式分别部署的，用户下单后系统会创建订单并扣减库存。</p><p>在下单过程中，如果网络故障或系统故障，就会出现创建订单失败但库存扣减成功或订单创建成功库存扣减失败，这样就会破坏数据一致性。</p><p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/09/01/20230901-160116.png" alt="分布式事务----问题描述.drawio"></p><p>而出现这个问题主要原因是数据库的事务只能保证当前机器的数据一致性，而在上面的例子中，订单服务与库存服务的数据库不相同，所以数据库的事务就无法保证这个下单场景的数据一致性。</p><h2 id="二阶段提交"><a href="#二阶段提交" class="headerlink" title="二阶段提交"></a>二阶段提交</h2><p>二阶段提交是分布式事务的一种解决方案。</p><p>二阶段提交通过一个协调者来控制事务的提交。当一个服务的本地事务执行完毕（还是未提交状态）后，通知协调者。当所有的服务都执行完毕后，协调者回向所有服务发送Commit命令，服务收到命令后提交本地事务。</p><img src="https://yichen-blog.oss-cn-beijing.aliyuncs.com//note-image/2023/09/01/20230901-163303.png" alt="分布式事务----二阶段提交.drawio" style="zoom:50%;"><p>具体过程如下：</p><p>prepare阶段：当需要执行分布式事务是，协调者回向所有服务发送prepare消息，服务开始执行本地事务，当执行完毕后（此时事务没有提交）给协调者发送ack消息</p><p>commit阶段：协调者收到所有服务的ack消息后，会发送commit消息，服务收到此消息后就会提交本地事务。</p><p><strong>存在的问题：</strong></p><ul><li>同步阻塞：如服务A占有资源M，服务B也需要资源M，但是资源A一直没提交，B就一直无法获取资源M，导致阻塞</li><li>单点故障：依赖协调者，协调者挂了就会瘫痪</li><li>数据不一致：在prepare节点发送ack后，网络出现故障，没有收到commit消息，而且服务都正常提交，此时就会出现数据不一致的问题。</li></ul><h2 id="三阶段提交"><a href="#三阶段提交" class="headerlink" title="三阶段提交"></a>三阶段提交</h2><p>三阶段提交就是在二阶段提交的中间多出一个阶段。</p><p>具体过程如下：</p><p>canCommit：协调者向服务发送canCommit消息，服务开始执行本地事务，完毕后给协调者发送ack消息</p><p>preCommit：协调者收到所有ack后，发送preCommit，服务再次确认。<strong>此时，服务已经知道其他服务的事务已经执行完毕，正在等待提交。</strong></p><p>doCommit：发送doCommit消息，服务提交本地事务</p><p><strong>优点：</strong></p><ul><li>引入超时机制，减少阻塞：如果超时，默认就会中断服务，但是如何是在第三阶段超时，服务会自动提交事务，因为在第二阶段服务已经知道其他服务的事务已经执行完毕。而二阶段无法实现。</li><li>可以搭建协调者集群：因为操作保证幂等性</li></ul>]]></content>
     
